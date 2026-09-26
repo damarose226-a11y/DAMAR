@@ -14,10 +14,10 @@ if (!process.env.OWNER_USERNAME || !process.env.OWNER_PASSWORD) {
   console.error('OWNER_USERNAME and OWNER_PASSWORD are required');
   process.exit(1);
 }
-if (!process.env.SESSION_SECRET || process.env.SESSION_SECRET.length < 32) {
-  console.error('SESSION_SECRET (minimum 32 characters) is required');
-  process.exit(1);
-}
+const SESSION_SECRET = process.env.SESSION_SECRET || crypto
+  .createHash('sha256')
+  .update(`${process.env.DATABASE_URL}|${process.env.OWNER_PASSWORD}`)
+  .digest('hex');
 
 const app = express();
 const pool = new Pool({
@@ -124,7 +124,7 @@ async function getProducts(where='WHERE is_visible=TRUE', params=[]){
 }
 
 function sessionHash(token){
-  return crypto.createHmac('sha256', process.env.SESSION_SECRET).update(token).digest('hex');
+  return crypto.createHmac('sha256', SESSION_SECRET).update(token).digest('hex');
 }
 function loginRateKey(req, username){
   const forwarded = String(req.headers['x-forwarded-for'] || '').split(',')[0].trim();
