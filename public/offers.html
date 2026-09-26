@@ -40,8 +40,9 @@ footer{background:#061f19;color:#e5dbc6;border-top:1px solid rgba(229,199,127,.2
 <script>
 const area=document.getElementById('offersArea'),count=document.getElementById('offerCount');
 const cart=JSON.parse(localStorage.getItem('damaRoseCart')||'[]');document.getElementById('cartBadge').textContent=cart.reduce((s,i)=>s+(Number(i.quantity)||0),0);
-async function render(){const r=await fetch('/api/offers');const offers=r.ok?await r.json():[];count.textContent=`${offers.length} عرض`;if(!offers.length){area.innerHTML='<div class="empty">لا توجد عروض متاحة حاليًا.</div>';return}area.innerHTML=`<div class="grid">${offers.map(o=>`<article class="offer-card"><div class="offer-image">Dama Rose</div><div class="offer-body"><span class="tag">عرض</span><h3>${o.ar}</h3><p>${o.text||''}</p><div class="offer-foot"><span class="price">${o.value||''}</span><a class="view" href="index.html#products">تصفح المنتجات</a></div></div></article>`).join('')}</div>`}
+async function render(){const r=await fetch('/api/offers');const offers=r.ok?await r.json():[];count.textContent=`${offers.length} عرض`;if(!offers.length){area.innerHTML='<div class="empty">لا توجد عروض متاحة حاليًا.</div>';return}area.innerHTML=`<div class="grid">${offers.map(o=>`<article class="offer-card"><div class="offer-image">Dama Rose</div><div class="offer-body"><span class="tag">عرض</span><h3>${(localStorage.getItem('dr_lang')==='en'&&o.en)?o.en:o.ar}</h3><p>${o.text||''}</p><div class="offer-foot"><span class="price">${o.value||''}</span><a class="view" href="index.html#products">تصفح المنتجات</a></div></div></article>`).join('')}</div>`}
 render();
 </script>
+<script src="/lang.js"></script>
 </body>
 </html>
