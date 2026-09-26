@@ -14,16 +14,24 @@ if (!process.env.OWNER_USERNAME || !process.env.OWNER_PASSWORD) {
   console.error('OWNER_USERNAME and OWNER_PASSWORD are required');
   process.exit(1);
 }
+if (!process.env.SESSION_SECRET || process.env.SESSION_SECRET.length < 32) {
+  console.error('SESSION_SECRET (minimum 32 characters) is required');
+  process.exit(1);
+}
 
 const app = express();
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
-  ssl: process.env.DATABASE_URL.includes('localhost') ? false : { rejectUnauthorized: false }
+  ssl: process.env.DATABASE_URL.includes('localhost') ? false : { rejectUnauthorized: false },
+  max: Number(process.env.DB_POOL_MAX || 5),
+  idleTimeoutMillis: 10000,
+  connectionTimeoutMillis: 10000
 });
 
 app.disable('x-powered-by');
+app.set('trust proxy', 1);
 app.use(express.json({ limit: '8mb' }));
-app.use(cookieParser(process.env.SESSION_SECRET || 'change-me'));
+app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public'), { extensions: ['html'] }));
 
 const ALL_PERMS = ['product_add','product_edit','product_delete','offer_manage','picks_manage','settings_manage'];
@@ -42,6 +50,13 @@ async function initDb(){
       token_hash TEXT PRIMARY KEY,
       admin_id UUID NOT NULL REFERENCES admins(id) ON DELETE CASCADE,
       expires_at TIMESTAMPTZ NOT NULL
+    );
+    CREATE TABLE IF NOT EXISTS auth_attempts (
+      rate_key TEXT PRIMARY KEY,
+      attempts INT NOT NULL DEFAULT 0,
+      window_started_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+      blocked_until TIMESTAMPTZ,
+      updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
     );
     CREATE TABLE IF NOT EXISTS products (
       id UUID PRIMARY KEY,
@@ -87,6 +102,12 @@ async function initDb(){
     ON CONFLICT (key) DO NOTHING`);
 }
 
+const dbReady = initDb();
+app.use(async (req,res,next)=>{
+  try { await dbReady; next(); }
+  catch (e) { next(e); }
+});
+
 function mapProduct(rows, variants){
   return rows.map(p => ({
     id:p.id, ar:p.name_ar, en:p.name_en, category:p.category,
@@ -102,10 +123,39 @@ async function getProducts(where='WHERE is_visible=TRUE', params=[]){
   return mapProduct(p.rows, v.rows);
 }
 
+function sessionHash(token){
+  return crypto.createHmac('sha256', process.env.SESSION_SECRET).update(token).digest('hex');
+}
+function loginRateKey(req, username){
+  const forwarded = String(req.headers['x-forwarded-for'] || '').split(',')[0].trim();
+  const ip = forwarded || req.ip || 'unknown';
+  return crypto.createHash('sha256').update(`${ip}|${String(username || '').toLowerCase()}`).digest('hex');
+}
+async function recordFailedLogin(rateKey){
+  await pool.query(`
+    INSERT INTO auth_attempts(rate_key,attempts,window_started_at,blocked_until,updated_at)
+    VALUES($1,1,NOW(),NULL,NOW())
+    ON CONFLICT(rate_key) DO UPDATE SET
+      attempts = CASE
+        WHEN auth_attempts.window_started_at < NOW() - INTERVAL '15 minutes' THEN 1
+        ELSE auth_attempts.attempts + 1
+      END,
+      window_started_at = CASE
+        WHEN auth_attempts.window_started_at < NOW() - INTERVAL '15 minutes' THEN NOW()
+        ELSE auth_attempts.window_started_at
+      END,
+      blocked_until = CASE
+        WHEN auth_attempts.window_started_at < NOW() - INTERVAL '15 minutes' THEN NULL
+        WHEN auth_attempts.attempts + 1 >= 5 THEN NOW() + INTERVAL '15 minutes'
+        ELSE auth_attempts.blocked_until
+      END,
+      updated_at = NOW()
+  `, [rateKey]);
+}
 async function auth(req,res,next){
   const token = req.cookies.dr_session;
   if (!token) return res.status(401).json({error:'unauthorized'});
-  const hash = crypto.createHash('sha256').update(token).digest('hex');
+  const hash = sessionHash(token);
   const q = await pool.query(`SELECT a.id,a.username,a.role,a.permissions FROM sessions s JOIN admins a ON a.id=s.admin_id WHERE s.token_hash=$1 AND s.expires_at>NOW()`, [hash]);
   if(!q.rowCount) return res.status(401).json({error:'unauthorized'});
   req.admin=q.rows[0]; next();
@@ -121,15 +171,28 @@ app.get('/api/offers', async(req,res,next)=>{try{const q=await pool.query('SELEC
 app.get('/api/settings', async(req,res,next)=>{try{const q=await pool.query('SELECT key,value FROM settings');res.json(Object.fromEntries(q.rows.map(x=>[x.key,x.value])));}catch(e){next(e)}});
 
 app.post('/api/auth/login', async(req,res,next)=>{try{
-  const {username,password}=req.body||{}; const q=await pool.query('SELECT * FROM admins WHERE username=$1',[String(username||'').trim()]);
-  if(!q.rowCount || !(await bcrypt.compare(String(password||''),q.rows[0].password_hash))) return res.status(401).json({error:'invalid_credentials'});
-  const token=crypto.randomBytes(32).toString('hex'); const hash=crypto.createHash('sha256').update(token).digest('hex');
+  const {username,password}=req.body||{};
+  const cleanUsername=String(username||'').trim();
+  const rateKey=loginRateKey(req, cleanUsername);
+  const rl=await pool.query('SELECT blocked_until FROM auth_attempts WHERE rate_key=$1',[rateKey]);
+  if(rl.rowCount && rl.rows[0].blocked_until && new Date(rl.rows[0].blocked_until)>new Date()){
+    return res.status(429).json({error:'too_many_attempts',retry_after_seconds:900});
+  }
+  const q=await pool.query('SELECT * FROM admins WHERE username=$1',[cleanUsername]);
+  const valid=q.rowCount && await bcrypt.compare(String(password||''),q.rows[0].password_hash);
+  if(!valid){
+    await recordFailedLogin(rateKey);
+    return res.status(401).json({error:'invalid_credentials'});
+  }
+  await pool.query('DELETE FROM auth_attempts WHERE rate_key=$1',[rateKey]);
+  const token=crypto.randomBytes(32).toString('hex');
+  const hash=sessionHash(token);
   await pool.query('DELETE FROM sessions WHERE expires_at<=NOW()');
   await pool.query('INSERT INTO sessions(token_hash,admin_id,expires_at) VALUES($1,$2,NOW()+INTERVAL \'7 days\')',[hash,q.rows[0].id]);
-  res.cookie('dr_session',token,{httpOnly:true,sameSite:'lax',secure:process.env.NODE_ENV==='production',maxAge:7*24*3600*1000});
+  res.cookie('dr_session',token,{httpOnly:true,sameSite:'lax',secure:process.env.NODE_ENV==='production',maxAge:7*24*3600*1000,path:'/'});
   res.json({id:q.rows[0].id,username:q.rows[0].username,role:q.rows[0].role,permissions:q.rows[0].permissions});
 }catch(e){next(e)}});
-app.post('/api/auth/logout', auth, async(req,res,next)=>{try{const token=req.cookies.dr_session;const hash=crypto.createHash('sha256').update(token).digest('hex');await pool.query('DELETE FROM sessions WHERE token_hash=$1',[hash]);res.clearCookie('dr_session');res.json({ok:true});}catch(e){next(e)}});
+app.post('/api/auth/logout', auth, async(req,res,next)=>{try{const token=req.cookies.dr_session;const hash=sessionHash(token);await pool.query('DELETE FROM sessions WHERE token_hash=$1',[hash]);res.clearCookie('dr_session',{path:'/'});res.json({ok:true});}catch(e){next(e)}});
 app.get('/api/auth/me', auth, (req,res)=>res.json(req.admin));
 
 app.get('/api/admin/products', auth, async(req,res,next)=>{try{res.json(await getProducts(''));}catch(e){next(e)}});
@@ -170,4 +233,10 @@ app.put('/api/admin/settings', auth, can('settings_manage'), async(req,res,next)
 
 app.use((err,req,res,next)=>{console.error(err);res.status(500).json({error:'server_error'});});
 
-initDb().then(()=>app.listen(process.env.PORT||3000,()=>console.log('Dama Rose server ready'))).catch(err=>{console.error(err);process.exit(1)});
+if (require.main === module) {
+  dbReady
+    .then(()=>app.listen(process.env.PORT||3000,()=>console.log('Dama Rose server ready')))
+    .catch(err=>{console.error(err);process.exit(1)});
+}
+
+module.exports = app;
