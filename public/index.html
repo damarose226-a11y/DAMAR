@@ -53,4 +53,5 @@ function renderProducts(filter=''){const grid=document.getElementById('productsG
 async function loadProducts(){try{const r=await fetch('/api/products');allProducts=r.ok?await r.json():[];renderProducts();renderDailyPicks(allProducts.filter(p=>p.pick));}catch{renderProducts();renderDailyPicks([])}}function renderDailyPicks(items){const grid=document.getElementById('dailyGrid');if(!items.length){grid.innerHTML='<div class="daily-empty"><div><b>ما نختاره لك</b><span>لم تتم إضافة منتجات اليوم بعد.</span></div></div>';return}grid.innerHTML=items.map(p=>card(p,'daily-card')).join('')}
 document.querySelectorAll('.cat[data-cat]').forEach(b=>b.onclick=()=>{renderProducts(b.dataset.cat);document.getElementById('product-list').scrollIntoView({behavior:'smooth'})});document.getElementById('showAllProducts').onclick=()=>renderProducts('');
 try{const c=JSON.parse(localStorage.getItem('damaRoseCart')||'[]');const b=document.getElementById('cartBadge');if(b)b.textContent=c.reduce((s,i)=>s+(Number(i.quantity)||0),0)}catch(e){}loadProducts();
-</script></body></html>
+</script><script src="/lang.js"></script>
+</body></html>
