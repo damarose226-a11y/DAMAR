@@ -3,13 +3,13 @@
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Dama Rose | لوحة الإدارة</title>
-<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Alexandria:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
-:root{--g:#0a2f27;--g2:#123f34;--b:#cbb58a;--c:#f6f0e3;--gold:#c7a45a;--line:#dfc99d;--danger:#962f2f}
-*{box-sizing:border-box}body{margin:0;font-family:Tajawal,sans-serif;background:#f3ecdf;color:#17362c}button,input,select,textarea{font:inherit}.hidden{display:none!important}
-.login{min-height:100vh;display:grid;place-items:center;background:linear-gradient(135deg,#082b23,#123f34);padding:20px}.login-card{width:min(430px,100%);background:#fffaf1;border:1px solid #c9a865;border-radius:24px;padding:28px}.login-card img{height:80px;display:block;margin:0 auto 12px}.login-card h1{text-align:center;margin:0 0 6px}.muted{font-size:13px;opacity:.7}.field{display:grid;gap:6px;margin-top:12px}.field input,.field select,.field textarea{border:1px solid #d5c29a;background:#fff;border-radius:11px;padding:11px}.field textarea{min-height:90px}
+:root{--g:#17483c;--g2:#225c4d;--b:#b88a54;--c:#f5ecdf;--gold:#b07a3f;--line:#c99a63;--danger:#962f2f}
+*{box-sizing:border-box}body{margin:0;font-family:Alexandria,sans-serif;background:#f3ecdf;color:#17362c}button,input,select,textarea{font:inherit}.hidden{display:none!important}
+.login{min-height:100vh;display:grid;place-items:center;background:linear-gradient(135deg,#17483c,#2e6a59);padding:20px}.login-card{width:min(430px,100%);background:#fffaf1;border:1px solid #c9a865;border-radius:24px;padding:28px}.login-card img{height:80px;display:block;margin:0 auto 12px}.login-card h1{text-align:center;margin:0 0 6px}.muted{font-size:13px;opacity:.7}.field{display:grid;gap:6px;margin-top:12px}.field input,.field select,.field textarea{border:1px solid #d5c29a;background:#fff;border-radius:11px;padding:11px}.field textarea{min-height:90px}
 .btn{border:0;border-radius:11px;padding:10px 13px;cursor:pointer}.primary{background:var(--g);color:white}.gold{background:linear-gradient(#e2c77f,#c7a45a);color:#17362c;font-weight:700}.danger{background:var(--danger);color:white}.ghost{background:#fff;border:1px solid #d5c29a}
-.app{display:grid;grid-template-columns:240px 1fr;min-height:100vh}.side{background:#082b23;color:#f4e8ce;padding:18px;position:sticky;top:0;height:100vh}.side img{height:70px;display:block;margin:0 auto 18px}.navbtn{width:100%;border:0;background:transparent;color:#eee2c9;text-align:right;padding:11px;border-radius:10px;margin:3px 0}.navbtn.active,.navbtn:hover{background:rgba(199,164,90,.15);color:#f2d997}.logout{position:absolute;bottom:18px;right:18px;left:18px}
+.app{display:grid;grid-template-columns:240px 1fr;min-height:100vh}.side{background:#17483c;color:#f4e8ce;padding:18px;position:sticky;top:0;height:100vh}.side img{height:70px;display:block;margin:0 auto 18px}.navbtn{width:100%;border:0;background:transparent;color:#eee2c9;text-align:right;padding:11px;border-radius:10px;margin:3px 0}.navbtn.active,.navbtn:hover{background:rgba(199,164,90,.15);color:#f2d997}.logout{position:absolute;bottom:18px;right:18px;left:18px}
 .main{min-width:0}.top{height:68px;background:#fffaf1;border-bottom:1px solid #e2cfaa;display:flex;align-items:center;justify-content:space-between;padding:0 22px;position:sticky;top:0;z-index:4}.top h2{margin:0;font-size:20px}.pill{background:#eee2ca;padding:6px 10px;border-radius:999px;font-size:12px}.content{padding:22px}.notice{background:#fff3d5;border:1px solid #e6c775;padding:10px 12px;border-radius:12px;font-size:13px;margin-bottom:16px}
 .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}.stat,.panel{background:#fffaf1;border:1px solid #e2cfaa;border-radius:16px;padding:16px}.stat b{display:block;font-size:28px}.panel{margin-top:16px}.panel-head{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:12px}.panel-head h3{margin:0}.table-wrap{overflow:auto}.table{width:100%;border-collapse:collapse;min-width:680px}.table th,.table td{padding:10px;border-bottom:1px solid #eadfc8;text-align:right;font-size:13px;vertical-align:top}.table th{color:#7b6847}.actions{display:flex;gap:6px;flex-wrap:wrap}.actions button{border:1px solid #d5c29a;background:white;border-radius:8px;padding:6px 9px}.thumb{width:50px;height:50px;object-fit:cover;border-radius:9px;background:#eadcbf}.empty{padding:28px;text-align:center;border:1px dashed #d4bd90;border-radius:12px}.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 .modal{position:fixed;inset:0;background:rgba(0,0,0,.55);display:grid;place-items:center;padding:18px;z-index:30}.modal-card{width:min(720px,100%);max-height:90vh;overflow:auto;background:#fffaf1;border-radius:18px;padding:18px}.modal-head{display:flex;justify-content:space-between;align-items:center}.modal-head h3{margin:0}.variants{display:grid;gap:8px;margin-top:10px}.variant{display:grid;grid-template-columns:1fr 1fr auto;gap:8px}.variant input{border:1px solid #d5c29a;border-radius:9px;padding:9px}.perms{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}.check{border:1px solid #dfcda8;padding:8px;border-radius:9px;background:white}.mobile{display:none}
@@ -38,8 +38,8 @@
 <div class="content"><div class="notice">هذه اللوحة متصلة بقاعدة البيانات. أي تغيير محفوظ يظهر على الموقع مباشرة.</div>
 
 <section id="dashboard" class="page"><div class="stats">
-<div class="stat"><b id="sProducts">0</b><span>منتج</span></div><div class="stat"><b id="sPicks">0</b><span>ما نختاره لك</span></div><div class="stat"><b id="sOffers">0</b><span>عرض</span></div><div class="stat"><b id="sManagers">0</b><span>مدير</span></div></div>
-<div class="panel"><h3>الأقسام</h3><p>بقلاوات · قشاطي · كنافة · نواشف</p></div></section>
+<div class="stat"><b id="sProducts">0</b><span>منتج</span></div><div class="stat"><b id="sPicks">0</b><span>الأكثر مبيعًا</span></div><div class="stat"><b id="sOffers">0</b><span>عرض</span></div><div class="stat"><b id="sManagers">0</b><span>مدير</span></div></div>
+<div class="panel"><h3>الأقسام</h3><p>بقلاوات · قشاطي · كنافة · نواشف · بوظة</p></div></section>
 
 <section id="products" class="page hidden"><div class="panel"><div class="panel-head"><h3>المنتجات</h3><button class="btn gold" id="addProduct">+ إضافة منتج</button></div><div id="productsWrap"></div></div></section>
 <section id="offers" class="page hidden"><div class="panel"><div class="panel-head"><h3>العروض</h3><button class="btn gold" id="addOffer">+ إضافة عرض</button></div><div id="offersWrap"></div></div></section>
@@ -49,8 +49,8 @@
 
 <div class="modal hidden" id="productModal"><div class="modal-card"><div class="modal-head"><h3>المنتج</h3><button class="btn ghost" data-close="productModal">×</button></div><input type="hidden" id="productId">
 <div class="grid2"><div class="field"><label>الاسم بالعربية</label><input id="pAr"></div><div class="field"><label>الاسم بالإنجليزية</label><input id="pEn"></div></div>
-<div class="grid2"><div class="field"><label>القسم</label><select id="pCat"><option>بقلاوات</option><option>قشاطي</option><option>كنافة</option><option>نواشف</option></select></div><div class="field"><label>صورة واحدة</label><input id="pImage" type="file" accept="image/*"></div></div>
-<label class="check" style="display:block;margin-top:12px"><input type="checkbox" id="pPick"> يظهر في «ما نختاره لك»</label>
+<div class="grid2"><div class="field"><label>القسم</label><select id="pCat"><option>بقلاوات</option><option>قشاطي</option><option>كنافة</option><option>نواشف</option><option>بوظة</option></select></div><div class="field"><label>صورة واحدة</label><input id="pImage" type="file" accept="image/*"></div></div>
+<label class="check" style="display:block;margin-top:12px"><input type="checkbox" id="pPick"> يظهر في «الأكثر مبيعًا»</label>
 <div class="panel-head" style="margin-top:14px"><b>الأحجام والأسعار</b><button class="btn ghost" id="addVariant">+ حجم</button></div><div class="variants" id="variants"></div>
 <div style="display:flex;gap:8px;margin-top:14px"><button class="btn primary" id="saveProduct">حفظ</button><button class="btn ghost" data-close="productModal">إلغاء</button></div></div></div>
 
@@ -64,7 +64,7 @@
 
 <script>
 const $=id=>document.getElementById(id);
-const PERMS={product_add:'إضافة المنتجات',product_edit:'تعديل المنتجات',product_delete:'حذف المنتجات',offer_manage:'إدارة العروض',picks_manage:'إدارة ما نختاره لك',settings_manage:'تعديل إعدادات الموقع'};
+const PERMS={product_add:'إضافة المنتجات',product_edit:'تعديل المنتجات',product_delete:'حذف المنتجات',offer_manage:'إدارة العروض',picks_manage:'إدارة الأكثر مبيعًا',settings_manage:'تعديل إعدادات الموقع'};
 let me=null,products=[],offers=[],managers=[],settings={};
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 async function api(url,opt={}){const r=await fetch(url,{credentials:'same-origin',headers:{'Content-Type':'application/json',...(opt.headers||{})},...opt});let d={};try{d=await r.json()}catch{}if(!r.ok){const e=new Error(d.error||'request_failed');e.status=r.status;throw e}return d}

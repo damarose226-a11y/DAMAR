@@ -62,7 +62,7 @@ async function initDb(){
       id UUID PRIMARY KEY,
       name_ar TEXT NOT NULL,
       name_en TEXT NOT NULL DEFAULT '',
-      category TEXT NOT NULL CHECK (category IN ('بقلاوات','قشاطي','كنافة','نواشف')),
+      category TEXT NOT NULL CHECK (category IN ('بقلاوات','قشاطي','كنافة','نواشف','بوظة')),
       image_data TEXT NOT NULL DEFAULT '',
       is_pick BOOLEAN NOT NULL DEFAULT FALSE,
       is_visible BOOLEAN NOT NULL DEFAULT TRUE,
@@ -90,6 +90,11 @@ async function initDb(){
       key TEXT PRIMARY KEY,
       value TEXT NOT NULL
     );
+  `);
+  await pool.query(`
+    ALTER TABLE products DROP CONSTRAINT IF EXISTS products_category_check;
+    ALTER TABLE products ADD CONSTRAINT products_category_check
+      CHECK (category IN ('بقلاوات','قشاطي','كنافة','نواشف','بوظة'));
   `);
   const exists = await pool.query("SELECT id FROM admins WHERE role='owner' LIMIT 1");
   if (!exists.rowCount) {
@@ -199,7 +204,7 @@ app.get('/api/admin/products', auth, async(req,res,next)=>{try{res.json(await ge
 app.post('/api/admin/products', auth, can('product_add'), async(req,res,next)=>{
   const client=await pool.connect();
   try{
-    const {ar,en='',category,image='',pick=false,variants=[]}=req.body||{}; if(!ar||!['بقلاوات','قشاطي','كنافة','نواشف'].includes(category)||!variants.length)return res.status(400).json({error:'invalid_product'});
+    const {ar,en='',category,image='',pick=false,variants=[]}=req.body||{}; if(!ar||!['بقلاوات','قشاطي','كنافة','نواشف','بوظة'].includes(category)||!variants.length)return res.status(400).json({error:'invalid_product'});
     const id=crypto.randomUUID(); const effectivePick=(req.admin.role==='owner'||(req.admin.permissions||[]).includes('picks_manage'))?!!pick:false; await client.query('BEGIN');
     await client.query('INSERT INTO products(id,name_ar,name_en,category,image_data,is_pick) VALUES($1,$2,$3,$4,$5,$6)',[id,ar,en,category,image,effectivePick]);
     for(let i=0;i<variants.length;i++){const v=variants[i];await client.query('INSERT INTO product_variants(id,product_id,label,price_omr,sort_order) VALUES($1,$2,$3,$4,$5)',[crypto.randomUUID(),id,v.size,Number(v.price),i]);}
@@ -209,7 +214,7 @@ app.post('/api/admin/products', auth, can('product_add'), async(req,res,next)=>{
 app.put('/api/admin/products/:id', auth, can('product_edit'), async(req,res,next)=>{
   const client=await pool.connect();
   try{
-    const {ar,en='',category,image='',pick=false,variants=[]}=req.body||{}; if(!ar||!['بقلاوات','قشاطي','كنافة','نواشف'].includes(category)||!variants.length)return res.status(400).json({error:'invalid_product'});
+    const {ar,en='',category,image='',pick=false,variants=[]}=req.body||{}; if(!ar||!['بقلاوات','قشاطي','كنافة','نواشف','بوظة'].includes(category)||!variants.length)return res.status(400).json({error:'invalid_product'});
     await client.query('BEGIN');
     let effectivePick=!!pick; if(req.admin.role!=='owner'&&!(req.admin.permissions||[]).includes('picks_manage')){const cur=await client.query('SELECT is_pick FROM products WHERE id=$1',[req.params.id]);effectivePick=!!cur.rows[0]?.is_pick;}
     await client.query('UPDATE products SET name_ar=$1,name_en=$2,category=$3,image_data=$4,is_pick=$5,updated_at=NOW() WHERE id=$6',[ar,en,category,image,effectivePick,req.params.id]);
