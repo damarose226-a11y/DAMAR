@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Dama Rose | لوحة الإدارة</title>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--g:#0a2f27;--g2:#123f34;--b:#cbb58a;--c:#f6f0e3;--gold:#c7a45a;--line:#dfc99d;--danger:#962f2f}
+*{box-sizing:border-box}body{margin:0;font-family:Tajawal,sans-serif;background:#f3ecdf;color:#17362c}button,input,select,textarea{font:inherit}.hidden{display:none!important}
+.login{min-height:100vh;display:grid;place-items:center;background:linear-gradient(135deg,#082b23,#123f34);padding:20px}.login-card{width:min(430px,100%);background:#fffaf1;border:1px solid #c9a865;border-radius:24px;padding:28px}.login-card img{height:80px;display:block;margin:0 auto 12px}.login-card h1{text-align:center;margin:0 0 6px}.muted{font-size:13px;opacity:.7}.field{display:grid;gap:6px;margin-top:12px}.field input,.field select,.field textarea{border:1px solid #d5c29a;background:#fff;border-radius:11px;padding:11px}.field textarea{min-height:90px}
+.btn{border:0;border-radius:11px;padding:10px 13px;cursor:pointer}.primary{background:var(--g);color:white}.gold{background:linear-gradient(#e2c77f,#c7a45a);color:#17362c;font-weight:700}.danger{background:var(--danger);color:white}.ghost{background:#fff;border:1px solid #d5c29a}
+.app{display:grid;grid-template-columns:240px 1fr;min-height:100vh}.side{background:#082b23;color:#f4e8ce;padding:18px;position:sticky;top:0;height:100vh}.side img{height:70px;display:block;margin:0 auto 18px}.navbtn{width:100%;border:0;background:transparent;color:#eee2c9;text-align:right;padding:11px;border-radius:10px;margin:3px 0}.navbtn.active,.navbtn:hover{background:rgba(199,164,90,.15);color:#f2d997}.logout{position:absolute;bottom:18px;right:18px;left:18px}
+.main{min-width:0}.top{height:68px;background:#fffaf1;border-bottom:1px solid #e2cfaa;display:flex;align-items:center;justify-content:space-between;padding:0 22px;position:sticky;top:0;z-index:4}.top h2{margin:0;font-size:20px}.pill{background:#eee2ca;padding:6px 10px;border-radius:999px;font-size:12px}.content{padding:22px}.notice{background:#fff3d5;border:1px solid #e6c775;padding:10px 12px;border-radius:12px;font-size:13px;margin-bottom:16px}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}.stat,.panel{background:#fffaf1;border:1px solid #e2cfaa;border-radius:16px;padding:16px}.stat b{display:block;font-size:28px}.panel{margin-top:16px}.panel-head{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:12px}.panel-head h3{margin:0}.table-wrap{overflow:auto}.table{width:100%;border-collapse:collapse;min-width:680px}.table th,.table td{padding:10px;border-bottom:1px solid #eadfc8;text-align:right;font-size:13px;vertical-align:top}.table th{color:#7b6847}.actions{display:flex;gap:6px;flex-wrap:wrap}.actions button{border:1px solid #d5c29a;background:white;border-radius:8px;padding:6px 9px}.thumb{width:50px;height:50px;object-fit:cover;border-radius:9px;background:#eadcbf}.empty{padding:28px;text-align:center;border:1px dashed #d4bd90;border-radius:12px}.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.55);display:grid;place-items:center;padding:18px;z-index:30}.modal-card{width:min(720px,100%);max-height:90vh;overflow:auto;background:#fffaf1;border-radius:18px;padding:18px}.modal-head{display:flex;justify-content:space-between;align-items:center}.modal-head h3{margin:0}.variants{display:grid;gap:8px;margin-top:10px}.variant{display:grid;grid-template-columns:1fr 1fr auto;gap:8px}.variant input{border:1px solid #d5c29a;border-radius:9px;padding:9px}.perms{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}.check{border:1px solid #dfcda8;padding:8px;border-radius:9px;background:white}.mobile{display:none}
+@media(max-width:850px){.app{grid-template-columns:1fr}.side{position:fixed;right:-255px;width:240px;z-index:20;transition:.2s}.side.open{right:0}.mobile{display:inline-block}.stats{grid-template-columns:1fr 1fr}.grid2{grid-template-columns:1fr}.content{padding:14px}}
+@media(max-width:500px){.stats{grid-template-columns:1fr}.perms{grid-template-columns:1fr}.variant{grid-template-columns:1fr 1fr}.variant .danger{grid-column:1/-1}}
+</style>
+</head>
+<body>
+<section id="loginView" class="login">
+<div class="login-card"><img src="../logo.png" alt="Dama Rose"><h1>لوحة إدارة Dama Rose</h1><p class="muted" style="text-align:center">دخول المديرين المصرح لهم فقط</p>
+<div class="field"><label>اسم المستخدم</label><input id="loginUser" autocomplete="username"></div>
+<div class="field"><label>كلمة المرور</label><input id="loginPass" type="password" autocomplete="current-password"></div>
+<div id="loginError" style="color:#962f2f;margin-top:10px;font-size:13px"></div>
+<button class="btn gold" style="width:100%;margin-top:14px" id="loginBtn">تسجيل الدخول</button></div>
+</section>
+
+<div id="appView" class="app hidden">
+<aside class="side" id="side"><img src="../logo.png" alt="Dama Rose">
+<button class="navbtn active" data-page="dashboard">⌂ لوحة التحكم</button>
+<button class="navbtn" data-page="products">▦ المنتجات</button>
+<button class="navbtn" data-page="offers">٪ العروض</button>
+<button class="navbtn" data-page="managers" id="navManagers">♙ المدراء</button>
+<button class="navbtn" data-page="settings">⚙ الإعدادات</button>
+<button class="navbtn logout" id="logoutBtn">↪ تسجيل الخروج</button></aside>
+<main class="main"><header class="top"><div style="display:flex;gap:10px;align-items:center"><button class="btn ghost mobile" id="menuBtn">☰</button><h2 id="pageTitle">لوحة التحكم</h2></div><div><span class="pill" id="rolePill"></span> <b id="currentUser"></b></div></header>
+<div class="content"><div class="notice">هذه اللوحة متصلة بقاعدة البيانات. أي تغيير محفوظ يظهر على الموقع مباشرة.</div>
+
+<section id="dashboard" class="page"><div class="stats">
+<div class="stat"><b id="sProducts">0</b><span>منتج</span></div><div class="stat"><b id="sPicks">0</b><span>ما نختاره لك</span></div><div class="stat"><b id="sOffers">0</b><span>عرض</span></div><div class="stat"><b id="sManagers">0</b><span>مدير</span></div></div>
+<div class="panel"><h3>الأقسام</h3><p>بقلاوات · قشاطي · كنافة · نواشف</p></div></section>
+
+<section id="products" class="page hidden"><div class="panel"><div class="panel-head"><h3>المنتجات</h3><button class="btn gold" id="addProduct">+ إضافة منتج</button></div><div id="productsWrap"></div></div></section>
+<section id="offers" class="page hidden"><div class="panel"><div class="panel-head"><h3>العروض</h3><button class="btn gold" id="addOffer">+ إضافة عرض</button></div><div id="offersWrap"></div></div></section>
+<section id="managers" class="page hidden"><div class="panel"><div class="panel-head"><h3>المدراء والصلاحيات</h3><button class="btn gold" id="addManager">+ إضافة مدير</button></div><div id="managersWrap"></div></div></section>
+<section id="settings" class="page hidden"><div class="panel"><h3>إعدادات الموقع</h3><div class="grid2"><div class="field"><label>رقم واتساب</label><input id="setWhats"></div><div class="field"><label>العنوان</label><input id="setAddress"></div></div><button class="btn primary" style="margin-top:12px" id="saveSettings">حفظ الإعدادات</button></div></section>
+</div></main></div>
+
+<div class="modal hidden" id="productModal"><div class="modal-card"><div class="modal-head"><h3>المنتج</h3><button class="btn ghost" data-close="productModal">×</button></div><input type="hidden" id="productId">
+<div class="grid2"><div class="field"><label>الاسم بالعربية</label><input id="pAr"></div><div class="field"><label>الاسم بالإنجليزية</label><input id="pEn"></div></div>
+<div class="grid2"><div class="field"><label>القسم</label><select id="pCat"><option>بقلاوات</option><option>قشاطي</option><option>كنافة</option><option>نواشف</option></select></div><div class="field"><label>صورة واحدة</label><input id="pImage" type="file" accept="image/*"></div></div>
+<label class="check" style="display:block;margin-top:12px"><input type="checkbox" id="pPick"> يظهر في «ما نختاره لك»</label>
+<div class="panel-head" style="margin-top:14px"><b>الأحجام والأسعار</b><button class="btn ghost" id="addVariant">+ حجم</button></div><div class="variants" id="variants"></div>
+<div style="display:flex;gap:8px;margin-top:14px"><button class="btn primary" id="saveProduct">حفظ</button><button class="btn ghost" data-close="productModal">إلغاء</button></div></div></div>
+
+<div class="modal hidden" id="offerModal"><div class="modal-card"><div class="modal-head"><h3>العرض</h3><button class="btn ghost" data-close="offerModal">×</button></div><input type="hidden" id="offerId">
+<div class="field"><label>العنوان بالعربية</label><input id="oAr"></div><div class="field"><label>العنوان بالإنجليزية</label><input id="oEn"></div><div class="field"><label>التفاصيل</label><textarea id="oText"></textarea></div><div class="field"><label>قيمة العرض</label><input id="oValue" placeholder="مثال: 20% أو 5.000 ر.ع"></div>
+<div style="display:flex;gap:8px;margin-top:14px"><button class="btn primary" id="saveOffer">حفظ</button><button class="btn ghost" data-close="offerModal">إلغاء</button></div></div></div>
+
+<div class="modal hidden" id="managerModal"><div class="modal-card"><div class="modal-head"><h3>المدير</h3><button class="btn ghost" data-close="managerModal">×</button></div><input type="hidden" id="managerId">
+<div class="grid2"><div class="field"><label>اسم المستخدم</label><input id="mUser"></div><div class="field"><label>كلمة المرور</label><input id="mPass" type="password" placeholder="اتركها فارغة عند التعديل"></div></div><div id="permBox" class="perms"></div>
+<div style="display:flex;gap:8px;margin-top:14px"><button class="btn primary" id="saveManager">حفظ</button><button class="btn ghost" data-close="managerModal">إلغاء</button></div></div></div>
+
+<script>
+const $=id=>document.getElementById(id);
+const PERMS={product_add:'إضافة المنتجات',product_edit:'تعديل المنتجات',product_delete:'حذف المنتجات',offer_manage:'إدارة العروض',picks_manage:'إدارة ما نختاره لك',settings_manage:'تعديل إعدادات الموقع'};
+let me=null,products=[],offers=[],managers=[],settings={};
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+async function api(url,opt={}){const r=await fetch(url,{credentials:'same-origin',headers:{'Content-Type':'application/json',...(opt.headers||{})},...opt});let d={};try{d=await r.json()}catch{}if(!r.ok){const e=new Error(d.error||'request_failed');e.status=r.status;throw e}return d}
+function can(p){return me?.role==='owner'||me?.permissions?.includes(p)}
+async function init(){try{me=await api('/api/auth/me');showApp()}catch{}}
+async function login(){loginError.textContent='';try{me=await api('/api/auth/login',{method:'POST',body:JSON.stringify({username:loginUser.value.trim(),password:loginPass.value})});showApp()}catch{loginError.textContent='بيانات الدخول غير صحيحة'}}
+async function showApp(){loginView.classList.add('hidden');appView.classList.remove('hidden');currentUser.textContent=me.username;rolePill.textContent=me.role==='owner'?'مدير رئيسي':'مدير';navManagers.style.display=me.role==='owner'?'':'none';addManager.style.display=me.role==='owner'?'':'none';addProduct.style.display=can('product_add')?'':'none';addOffer.style.display=can('offer_manage')?'':'none';saveSettings.style.display=can('settings_manage')?'':'none';await refresh()}
+async function refresh(){const jobs=[api('/api/admin/products'),api('/api/admin/offers'),api('/api/settings')];if(me.role==='owner')jobs.push(api('/api/admin/managers'));const r=await Promise.all(jobs);products=r[0];offers=r[1];settings=r[2];managers=me.role==='owner'?r[3]:[];sProducts.textContent=products.length;sPicks.textContent=products.filter(x=>x.pick).length;sOffers.textContent=offers.length;sManagers.textContent=me.role==='owner'?managers.length:'—';setWhats.value=settings.whatsapp||'';setAddress.value=settings.address||'';renderProducts();renderOffers();renderManagers()}
+document.querySelectorAll('[data-page]').forEach(b=>b.onclick=()=>{document.querySelectorAll('.page').forEach(x=>x.classList.add('hidden'));$(b.dataset.page).classList.remove('hidden');document.querySelectorAll('[data-page]').forEach(x=>x.classList.remove('active'));b.classList.add('active');pageTitle.textContent=b.textContent.trim();side.classList.remove('open')});
+document.querySelectorAll('[data-close]').forEach(b=>b.onclick=()=>$(b.dataset.close).classList.add('hidden'));
+loginBtn.onclick=login;logoutBtn.onclick=async()=>{try{await api('/api/auth/logout',{method:'POST'})}catch{}location.reload()};menuBtn.onclick=()=>side.classList.toggle('open');
+function renderProducts(){productsWrap.innerHTML=products.length?'<div class="table-wrap"><table class="table"><thead><tr><th>صورة</th><th>المنتج</th><th>القسم</th><th>الأحجام</th><th>مختارات</th><th>الإجراءات</th></tr></thead><tbody>'+products.map(p=>'<tr><td>'+(p.image?'<img class="thumb" src="'+p.image+'">':'—')+'</td><td><b>'+esc(p.ar)+'</b><div class="muted">'+esc(p.en||'')+'</div></td><td>'+esc(p.category)+'</td><td>'+(p.variants||[]).map(v=>esc(v.size)+' — '+Number(v.price).toFixed(3)+' ر.ع').join('<br>')+'</td><td>'+(p.pick?'نعم':'لا')+'</td><td><div class="actions">'+(can('product_edit')?'<button onclick="openProduct(\''+p.id+'\')">تعديل</button>':'')+(can('product_delete')?'<button onclick="deleteProduct(\''+p.id+'\')">حذف</button>':'')+'</div></td></tr>').join('')+'</tbody></table></div>':'<div class="empty">لا توجد منتجات بعد.</div>'}
+function addV(v={}){const d=document.createElement('div');d.className='variant';d.innerHTML='<input class="vsize" placeholder="مثال: 0.5 كغ" value="'+esc(v.size||'')+'"><input class="vprice" type="number" min="0" step="0.001" placeholder="السعر ر.ع" value="'+(v.price??'')+'"><button class="btn danger" type="button">حذف</button>';d.querySelector('button').onclick=()=>d.remove();variants.appendChild(d)}
+function openProduct(id=''){if(id&&!can('product_edit')||!id&&!can('product_add'))return;const p=products.find(x=>x.id===id);productId.value=id;pAr.value=p?.ar||'';pEn.value=p?.en||'';pCat.value=p?.category||'بقلاوات';pPick.checked=!!p?.pick;pImage.value='';variants.innerHTML='';(p?.variants?.length?p.variants:[{}]).forEach(addV);productModal.classList.remove('hidden')}
+addProduct.onclick=()=>openProduct();addVariant.onclick=()=>addV();
+function fileData(f){return new Promise((ok,bad)=>{if(!f)return ok('');const r=new FileReader();r.onload=()=>ok(r.result);r.onerror=bad;r.readAsDataURL(f)})}
+saveProduct.onclick=async()=>{const vs=[...document.querySelectorAll('.variant')].map(r=>({size:r.querySelector('.vsize').value.trim(),price:Number(r.querySelector('.vprice').value)})).filter(v=>v.size&&Number.isFinite(v.price));if(!pAr.value.trim()||!vs.length)return alert('أدخل الاسم وحجمًا وسعرًا واحدًا على الأقل');const old=products.find(x=>x.id===productId.value);const img=await fileData(pImage.files[0]);const body={ar:pAr.value.trim(),en:pEn.value.trim(),category:pCat.value,pick:pPick.checked,variants:vs,image:img||old?.image||''};if(productId.value)await api('/api/admin/products/'+productId.value,{method:'PUT',body:JSON.stringify(body)});else await api('/api/admin/products',{method:'POST',body:JSON.stringify(body)});productModal.classList.add('hidden');await refresh()};
+window.openProduct=openProduct;window.deleteProduct=async id=>{if(confirm('حذف المنتج نهائيًا؟')){await api('/api/admin/products/'+id,{method:'DELETE'});refresh()}};
+function renderOffers(){offersWrap.innerHTML=offers.length?'<div class="table-wrap"><table class="table"><thead><tr><th>العرض</th><th>التفاصيل</th><th>القيمة</th><th>الإجراءات</th></tr></thead><tbody>'+offers.map(o=>'<tr><td><b>'+esc(o.ar)+'</b></td><td>'+esc(o.text||'')+'</td><td>'+esc(o.value||'')+'</td><td><div class="actions">'+(can('offer_manage')?'<button onclick="openOffer(\''+o.id+'\')">تعديل</button><button onclick="deleteOffer(\''+o.id+'\')">حذف</button>':'')+'</div></td></tr>').join('')+'</tbody></table></div>':'<div class="empty">لا توجد عروض بعد.</div>'}
+function openOffer(id=''){if(!can('offer_manage'))return;const o=offers.find(x=>x.id===id);offerId.value=id;oAr.value=o?.ar||'';oEn.value=o?.en||'';oText.value=o?.text||'';oValue.value=o?.value||'';offerModal.classList.remove('hidden')}addOffer.onclick=()=>openOffer();
+saveOffer.onclick=async()=>{if(!oAr.value.trim())return alert('اكتب عنوان العرض');const body={ar:oAr.value.trim(),en:oEn.value.trim(),text:oText.value.trim(),value:oValue.value.trim()};if(offerId.value)await api('/api/admin/offers/'+offerId.value,{method:'PUT',body:JSON.stringify(body)});else await api('/api/admin/offers',{method:'POST',body:JSON.stringify(body)});offerModal.classList.add('hidden');refresh()};
+window.openOffer=openOffer;window.deleteOffer=async id=>{if(confirm('حذف العرض؟')){await api('/api/admin/offers/'+id,{method:'DELETE'});refresh()}};
+function renderManagers(){if(me.role!=='owner')return;managersWrap.innerHTML='<div class="table-wrap"><table class="table"><thead><tr><th>المستخدم</th><th>النوع</th><th>الصلاحيات</th><th>الإجراءات</th></tr></thead><tbody>'+managers.map(a=>'<tr><td>'+esc(a.username)+'</td><td>'+(a.role==='owner'?'مدير رئيسي':'مدير')+'</td><td>'+(a.role==='owner'?'كامل':(a.permissions||[]).map(p=>PERMS[p]).join('، '))+'</td><td>'+(a.role==='owner'?'—':'<button onclick="openManager(\''+a.id+'\')">تعديل</button> <button onclick="deleteManager(\''+a.id+'\')">حذف</button>')+'</td></tr>').join('')+'</tbody></table></div>'}
+function openManager(id=''){if(me.role!=='owner')return;const a=managers.find(x=>x.id===id);managerId.value=id;mUser.value=a?.username||'';mPass.value='';permBox.innerHTML=Object.entries(PERMS).map(([k,v])=>'<label class="check"><input type="checkbox" value="'+k+'" '+(a?.permissions?.includes(k)?'checked':'')+'> '+v+'</label>').join('');managerModal.classList.remove('hidden')}addManager.onclick=()=>openManager();
+saveManager.onclick=async()=>{const body={username:mUser.value.trim(),password:mPass.value,permissions:[...permBox.querySelectorAll('input:checked')].map(x=>x.value)};if(managerId.value)await api('/api/admin/managers/'+managerId.value,{method:'PUT',body:JSON.stringify(body)});else await api('/api/admin/managers',{method:'POST',body:JSON.stringify(body)});managerModal.classList.add('hidden');refresh()};
+window.openManager=openManager;window.deleteManager=async id=>{if(confirm('حذف المدير؟')){await api('/api/admin/managers/'+id,{method:'DELETE'});refresh()}};
+saveSettings.onclick=async()=>{await api('/api/admin/settings',{method:'PUT',body:JSON.stringify({whatsapp:setWhats.value.trim(),address:setAddress.value.trim()})});alert('تم الحفظ');refresh()};
+init();
+</script>
+</body></html>
