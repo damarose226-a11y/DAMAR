@@ -22,6 +22,7 @@
 <div class="login-card"><img src="../logo.png" alt="Dama Rose"><h1>لوحة إدارة Dama Rose</h1><p class="muted" style="text-align:center">دخول المديرين المصرح لهم فقط</p>
 <div class="field"><label>اسم المستخدم</label><input id="loginUser" autocomplete="username"></div>
 <div class="field"><label>كلمة المرور</label><input id="loginPass" type="password" autocomplete="current-password"></div>
+<div class="field hidden" id="setupTokenField"><label>رمز التهيئة لمرة واحدة</label><input id="setupToken" autocomplete="one-time-code"></div>
 <div id="loginError" style="color:#962f2f;margin-top:10px;font-size:13px"></div>
 <button class="btn gold" style="width:100%;margin-top:14px" id="loginBtn">تسجيل الدخول</button></div>
 </section>
@@ -65,12 +66,41 @@
 <script>
 const $=id=>document.getElementById(id);
 const PERMS={product_add:'إضافة المنتجات',product_edit:'تعديل المنتجات',product_delete:'حذف المنتجات',offer_manage:'إدارة العروض',picks_manage:'إدارة الأكثر مبيعًا',settings_manage:'تعديل إعدادات الموقع'};
-let me=null,products=[],offers=[],managers=[],settings={};
+let me=null,products=[],offers=[],managers=[],settings={},needsSetup=false;
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 async function api(url,opt={}){const r=await fetch(url,{credentials:'same-origin',headers:{'Content-Type':'application/json',...(opt.headers||{})},...opt});let d={};try{d=await r.json()}catch{}if(!r.ok){const e=new Error(d.error||'request_failed');e.status=r.status;throw e}return d}
 function can(p){return me?.role==='owner'||me?.permissions?.includes(p)}
-async function init(){try{me=await api('/api/auth/me');showApp()}catch{}}
-async function login(){loginError.textContent='';try{me=await api('/api/auth/login',{method:'POST',body:JSON.stringify({username:loginUser.value.trim(),password:loginPass.value})});showApp()}catch{loginError.textContent='بيانات الدخول غير صحيحة'}}
+async function init(){
+  const setupFromUrl=new URLSearchParams(location.search).get('setup')||'';
+  try{
+    const s=await api('/api/setup/status');
+    needsSetup=!!s.needs_setup;
+    if(needsSetup){
+      setupTokenField.classList.remove('hidden');
+      setupToken.value=setupFromUrl;
+      loginBtn.textContent='إنشاء المدير الرئيسي';
+      document.querySelector('.login-card .muted').textContent='تهيئة آمنة لأول مدير في لوحة Dama Rose';
+      return;
+    }
+  }catch{}
+  try{me=await api('/api/auth/me');showApp()}catch{}
+}
+async function login(){
+  loginError.textContent='';
+  try{
+    if(needsSetup){
+      me=await api('/api/setup/owner',{method:'POST',body:JSON.stringify({username:loginUser.value.trim(),password:loginPass.value,setup_token:setupToken.value.trim()})});
+      history.replaceState({},'',location.pathname);
+      needsSetup=false;
+      showApp();
+      return;
+    }
+    me=await api('/api/auth/login',{method:'POST',body:JSON.stringify({username:loginUser.value.trim(),password:loginPass.value})});
+    showApp();
+  }catch(e){
+    loginError.textContent=needsSetup?(e.message==='invalid_setup_token'?'رمز التهيئة غير صحيح':'أدخل اسم مستخدم وكلمة مرور من 8 أحرف على الأقل'):'بيانات الدخول غير صحيحة';
+  }
+}
 async function showApp(){loginView.classList.add('hidden');appView.classList.remove('hidden');currentUser.textContent=me.username;rolePill.textContent=me.role==='owner'?'مدير رئيسي':'مدير';navManagers.style.display=me.role==='owner'?'':'none';addManager.style.display=me.role==='owner'?'':'none';addProduct.style.display=can('product_add')?'':'none';addOffer.style.display=can('offer_manage')?'':'none';saveSettings.style.display=can('settings_manage')?'':'none';await refresh()}
 async function refresh(){const jobs=[api('/api/admin/products'),api('/api/admin/offers'),api('/api/settings')];if(me.role==='owner')jobs.push(api('/api/admin/managers'));const r=await Promise.all(jobs);products=r[0];offers=r[1];settings=r[2];managers=me.role==='owner'?r[3]:[];sProducts.textContent=products.length;sPicks.textContent=products.filter(x=>x.pick).length;sOffers.textContent=offers.length;sManagers.textContent=me.role==='owner'?managers.length:'—';setWhats.value=settings.whatsapp||'';setAddress.value=settings.address||'';renderProducts();renderOffers();renderManagers()}
 document.querySelectorAll('[data-page]').forEach(b=>b.onclick=()=>{document.querySelectorAll('.page').forEach(x=>x.classList.add('hidden'));$(b.dataset.page).classList.remove('hidden');document.querySelectorAll('[data-page]').forEach(x=>x.classList.remove('active'));b.classList.add('active');pageTitle.textContent=b.textContent.trim();side.classList.remove('open')});
