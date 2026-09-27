@@ -23,7 +23,8 @@ const app = express();
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
   ssl: process.env.DATABASE_URL.includes('localhost') ? false : { rejectUnauthorized: false },
-  max: Number(process.env.DB_POOL_MAX || 5),
+  max: Number(process.env.DB_POOL_MAX || 1),
+  keepAlive: true,
   idleTimeoutMillis: 10000,
   connectionTimeoutMillis: 10000
 });
@@ -90,6 +91,15 @@ async function initDb(){
       key TEXT PRIMARY KEY,
       value TEXT NOT NULL
     );
+  `);
+  await pool.query(`
+    CREATE INDEX IF NOT EXISTS idx_sessions_expires_at ON sessions(expires_at);
+    CREATE INDEX IF NOT EXISTS idx_sessions_admin_id ON sessions(admin_id);
+    CREATE INDEX IF NOT EXISTS idx_auth_attempts_updated_at ON auth_attempts(updated_at);
+    CREATE INDEX IF NOT EXISTS idx_products_visible_created ON products(is_visible, created_at DESC);
+    CREATE INDEX IF NOT EXISTS idx_products_pick_visible ON products(is_pick, is_visible, created_at DESC);
+    CREATE INDEX IF NOT EXISTS idx_product_variants_product_sort ON product_variants(product_id, sort_order);
+    CREATE INDEX IF NOT EXISTS idx_offers_visible_created ON offers(is_visible, created_at DESC);
   `);
   await pool.query(`
     ALTER TABLE products DROP CONSTRAINT IF EXISTS products_category_check;
