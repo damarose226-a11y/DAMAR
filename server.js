@@ -21,6 +21,17 @@ function functionUrl(req) {
   return SUPABASE_URL.replace(/\/$/, '') + '/functions/v1/dama-api' + req.originalUrl;
 }
 
+function getCookie(req, name) {
+  const raw = String(req.headers.cookie || '');
+  for (const part of raw.split(';')) {
+    const i = part.indexOf('=');
+    if (i > 0 && part.slice(0, i).trim() === name) {
+      return decodeURIComponent(part.slice(i + 1).trim());
+    }
+  }
+  return '';
+}
+
 app.use('/api', async (req, res) => {
   if (!SUPABASE_URL || !SUPABASE_KEY) {
     return res.status(503).json({ error: 'supabase_not_configured' });
@@ -34,7 +45,8 @@ app.use('/api', async (req, res) => {
       'authorization': 'Bearer ' + SUPABASE_KEY,
       'x-forwarded-for': String(req.headers['x-forwarded-for'] || req.ip || '')
     };
-    if (req.headers.cookie) headers.cookie = req.headers.cookie;
+    const sessionToken = getCookie(req, 'dr_session');
+    if (sessionToken) headers.cookie = 'dr_session=' + encodeURIComponent(sessionToken);
 
     const options = {
       method: req.method,
@@ -50,8 +62,25 @@ app.use('/api', async (req, res) => {
     const contentType = upstream.headers.get('content-type');
     if (contentType) res.setHeader('content-type', contentType);
 
-    const setCookie = upstream.headers.get('set-cookie');
-    if (setCookie) res.setHeader('set-cookie', setCookie);
+    const newSession = upstream.headers.get('x-dama-session');
+    if (newSession) {
+      res.cookie('dr_session', newSession, {
+        httpOnly: true,
+        secure: true,
+        sameSite: 'lax',
+        maxAge: 7 * 24 * 60 * 60 * 1000,
+        path: '/'
+      });
+    }
+
+    if (upstream.headers.get('x-dama-clear-session') === '1') {
+      res.clearCookie('dr_session', {
+        httpOnly: true,
+        secure: true,
+        sameSite: 'lax',
+        path: '/'
+      });
+    }
 
     res.status(upstream.status).send(body);
   } catch (error) {
