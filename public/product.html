@@ -40,15 +40,15 @@
 <script>
 let product=null;
 const sizes=document.getElementById('sizes');
-function getCart(){try{return JSON.parse(localStorage.getItem('damaRoseCart')||'[]')}catch(e){return[]}}
+function getCart(){try{const a=JSON.parse(localStorage.getItem('damaRoseCart')||'[]');return Array.isArray(a)?a.map(i=>({...i,image:''})):[]}catch(e){return[]}}
 function cartUnits(){return getCart().reduce((s,i)=>s+(Number(i.quantity)||0),0)}
 function updateBadge(){document.getElementById('cartBadge').textContent=cartUnits()}
 function addVariant(opt){
  const cart=getCart(),key=String(product.id)+'|'+String(opt.size);
  const exact=cart.find(i=>String(i.productId)===String(product.id)&&String(i.option)===String(opt.size));
  if(exact)exact.quantity=(Number(exact.quantity)||0)+1;
- else cart.push({key,productId:String(product.id),name:product.ar,nameEn:product.en||'',option:String(opt.size),price:Number(opt.price),quantity:1,image:product.image||''});
- localStorage.setItem('damaRoseCart',JSON.stringify(cart));updateBadge();
+ else cart.push({key,productId:String(product.id),name:product.ar,nameEn:product.en||'',option:String(opt.size),price:Number(opt.price),quantity:1,image:''});
+ try{localStorage.setItem('damaRoseCart',JSON.stringify(cart))}catch(e){alert('تعذر حفظ السلة على الجهاز');return}updateBadge();
  const toast=document.getElementById('toast');toast.textContent='تمت إضافة '+opt.size+' إلى السلة';toast.classList.add('show');setTimeout(()=>toast.classList.remove('show'),1500);
 }
 async function load(){
