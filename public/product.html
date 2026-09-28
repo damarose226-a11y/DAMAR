@@ -15,7 +15,7 @@
 .page{padding:24px 0 48px}.back{display:inline-flex;align-items:center;gap:8px;color:#6f6045;font-size:14px;margin-bottom:16px}.product{background:#fbf6ec;border:1px solid var(--line);border-radius:24px;overflow:hidden;box-shadow:0 16px 50px rgba(40,32,18,.08)}
 .photo{aspect-ratio:4/3;background:linear-gradient(135deg,#d7c39d,#efe4cf);display:grid;place-items:center;position:relative}.photo:before{content:"صورة المنتج";color:#715f42;font-weight:700}.photo[style*="background-image"]:before{content:""}.photo:after{content:"";position:absolute;inset:18px;border:1px solid rgba(117,89,44,.22);border-radius:18px}
 .content{padding:24px}.kicker{color:#9a7439;font-size:13px;margin-bottom:6px}.title{font-size:30px;line-height:1.25;margin:0 0 18px;color:var(--green)}
-.label{font-weight:700;margin-bottom:10px}.sizes{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:22px}.size{border:1px solid #d5c092;background:#f7efdf;color:var(--ink);padding:13px 12px;border-radius:14px;cursor:pointer;font-weight:700;transition:.18s}.size.active{background:var(--green);color:#fff;border-color:var(--green);box-shadow:0 8px 20px rgba(10,47,39,.16)}
+.label{font-weight:700;margin-bottom:10px}.sizes{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:22px}.size{border:1px solid #d5c092;background:#f7efdf;color:var(--ink);padding:13px 12px;border-radius:14px;cursor:pointer;font-weight:700;transition:.18s;display:flex;flex-direction:column;gap:4px;align-items:center}.size small{font-size:12px;color:#8a642a}.size:active{background:var(--green);color:#fff}.size:active small{color:#fff}
 .pricebox{display:flex;justify-content:space-between;align-items:center;padding:16px 0;border-top:1px solid #eadbc0;border-bottom:1px solid #eadbc0;margin-bottom:20px}.pricebox span{color:#796a52}.price{font-size:26px;font-weight:800;color:#8a642a}.qtyrow{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}.qty{display:flex;align-items:center;border:1px solid #d2bc8e;border-radius:14px;overflow:hidden;background:#fffaf0}.qty button{width:44px;height:44px;border:0;background:transparent;font-size:22px;color:var(--green);cursor:pointer}.qty strong{width:48px;text-align:center;font-size:18px}.add{width:100%;border:0;border-radius:16px;padding:15px 18px;background:linear-gradient(180deg,#153f34,#0a2f27);color:#fff;font-weight:800;font-size:16px;cursor:pointer;box-shadow:0 10px 25px rgba(10,47,39,.18)}.add:active{transform:translateY(1px)}
 .note{text-align:center;color:#88785d;font-size:12px;margin-top:12px}.toast{position:fixed;left:50%;bottom:24px;transform:translate(-50%,20px);background:#0a2f27;color:#fff;padding:11px 18px;border-radius:999px;font-size:13px;opacity:0;pointer-events:none;transition:.22s}.toast.show{opacity:1;transform:translate(-50%,0)}
 @media(min-width:760px){.page{padding-top:36px}.product{max-width:620px;margin:auto}.content{padding:30px}.sizes{grid-template-columns:repeat(3,1fr)}}
@@ -30,50 +30,37 @@
   <div class="content">
     <div class="kicker">Dama Rose</div>
     <h1 class="title" id="productTitle">اسم المنتج</h1>
-    <div class="label">اختر الحجم</div>
+    <div class="label">اختر الحجم وأضفه مباشرة للسلة</div>
     <div class="sizes" id="sizes"></div>
-    <div class="pricebox"><span>السعر</span><div class="price" id="price">—</div></div>
-    <div class="qtyrow"><div class="label" style="margin:0">الكمية</div><div class="qty"><button id="plus" aria-label="زيادة">+</button><strong id="qty">1</strong><button id="minus" aria-label="نقص">−</button></div></div>
-    <button class="add" id="addBtn">أضف للسلة</button>
-    <div class="note">يتم اختيار الحجم أولًا ثم إضافة المنتج إلى السلة.</div>
+    <div class="note">يمكنك إضافة أكثر من حجم من نفس المنتج، وسيظهر كل حجم كسطر مستقل في السلة.</div>
   </div>
 </article>
 </div></main>
 <div class="toast" id="toast">تمت إضافة المنتج إلى السلة</div>
 <script>
-let product=null,selected=null,quantity=1;
-const sizes=document.getElementById('sizes'),price=document.getElementById('price'),qtyEl=document.getElementById('qty');
+let product=null;
+const sizes=document.getElementById('sizes');
 function getCart(){try{return JSON.parse(localStorage.getItem('damaRoseCart')||'[]')}catch(e){return[]}}
 function cartUnits(){return getCart().reduce((s,i)=>s+(Number(i.quantity)||0),0)}
 function updateBadge(){document.getElementById('cartBadge').textContent=cartUnits()}
-updateBadge();
+function addVariant(opt){
+ const cart=getCart(),key=String(product.id)+'|'+String(opt.size);
+ const exact=cart.find(i=>String(i.productId)===String(product.id)&&String(i.option)===String(opt.size));
+ if(exact)exact.quantity=(Number(exact.quantity)||0)+1;
+ else cart.push({key,productId:String(product.id),name:product.ar,nameEn:product.en||'',option:String(opt.size),price:Number(opt.price),quantity:1,image:product.image||''});
+ localStorage.setItem('damaRoseCart',JSON.stringify(cart));updateBadge();
+ const toast=document.getElementById('toast');toast.textContent='تمت إضافة '+opt.size+' إلى السلة';toast.classList.add('show');setTimeout(()=>toast.classList.remove('show'),1500);
+}
 async function load(){
  const id=new URLSearchParams(location.search).get('id');
- if(!id){document.getElementById('productTitle').textContent='المنتج غير موجود';return}
- const r=await fetch('/api/products/'+encodeURIComponent(id));
- if(!r.ok){document.getElementById('productTitle').textContent='المنتج غير موجود';return}
- product=await r.json();
- document.getElementById('productTitle').textContent=(localStorage.getItem('dr_lang')==='en'&&product.en)?product.en:product.ar;
- document.title='Dama Rose | '+((localStorage.getItem('dr_lang')==='en'&&product.en)?product.en:product.ar);
- if(product.image){const ph=document.getElementById('photo');ph.style.backgroundImage=`url("${product.image}")`;ph.style.backgroundSize='cover';ph.style.backgroundPosition='center';ph.style.backgroundColor='#efe4cf';}
+ if(!id)return document.getElementById('productTitle').textContent='المنتج غير موجود';
+ const r=await fetch('/api/products/'+encodeURIComponent(id));if(!r.ok)return document.getElementById('productTitle').textContent='المنتج غير موجود';
+ product=await r.json();document.getElementById('productTitle').textContent=(localStorage.getItem('dr_lang')==='en'&&product.en)?product.en:product.ar;
+ if(product.image){const ph=document.getElementById('photo');ph.style.backgroundImage=`url("${product.image}")`;ph.style.backgroundSize='cover';ph.style.backgroundPosition='center'}
  sizes.innerHTML='';
- (product.variants||[]).forEach((opt,i)=>{const b=document.createElement('button');b.type='button';b.className='size';b.textContent=opt.size;b.addEventListener('click',()=>{selected=i;[...sizes.children].forEach(x=>x.classList.remove('active'));b.classList.add('active');price.textContent=Number(opt.price).toFixed(3)+' ر.ع'});sizes.appendChild(b)});
- if((product.variants||[]).length){selected=0;sizes.children[0]?.classList.add('active');price.textContent=Number(product.variants[0].price).toFixed(3)+' ر.ع'}
+ (product.variants||[]).forEach(opt=>{const b=document.createElement('button');b.type='button';b.className='size';b.innerHTML='<span>'+opt.size+'</span><small>'+Number(opt.price).toFixed(3)+' ر.ع — أضف للسلة</small>';b.onclick=()=>addVariant(opt);sizes.appendChild(b)});
 }
-document.getElementById('plus').onclick=()=>{quantity++;qtyEl.textContent=quantity};
-document.getElementById('minus').onclick=()=>{if(quantity>1){quantity--;qtyEl.textContent=quantity}};
-document.getElementById('addBtn').onclick=()=>{
- if(!product||selected===null)return;
- const opt=product.variants[selected],cart=getCart();
- const key=String(product.id)+'|'+String(opt.size);
- const exactIndex=cart.findIndex(i=>String(i.productId)===String(product.id)&&String(i.option)===String(opt.size));
- if(exactIndex>=0){cart[exactIndex].quantity=(Number(cart[exactIndex].quantity)||0)+quantity;cart[exactIndex].key=key}
- else cart.push({key,productId:String(product.id),name:product.ar,nameEn:product.en||'',option:String(opt.size),price:Number(opt.price),quantity:Number(quantity),image:product.image||''});
- localStorage.setItem('damaRoseCart',JSON.stringify(cart));
- updateBadge();quantity=1;qtyEl.textContent='1';
- const toast=document.getElementById('toast');toast.textContent='تمت إضافة '+opt.size+' إلى السلة';toast.classList.add('show');setTimeout(()=>toast.classList.remove('show'),1500);
-};
-load();
+updateBadge();load();
 </script>
 <script src="/lang.js"></script>
 </body>
