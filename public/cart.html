@@ -23,7 +23,7 @@
 <header class="topbar"><div class="container nav"><a class="brand" href="index.html"><img src="logo.png" alt="Dama Rose"></a><div class="tools"><a class="lang" href="#">EN | AR</a><a class="cart" href="cart.html" aria-label="السلة">🛒<span class="badge" id="cartBadge">0</span></a></div></div></header>
 <main class="page"><div class="container"><a class="back" href="index.html">← متابعة التسوق</a><div class="head"><div class="eyebrow">Dama Rose</div><h1>سلة الطلب</h1><p>راجع المنتجات والكميات قبل إرسال الطلب عبر واتساب.</p></div><section class="cartbox" id="cartBox"><div id="content"></div></section></div></main>
 <script>
-let cart=JSON.parse(localStorage.getItem('damaRoseCart')||'[]');let settings={whatsapp:'92415565'};
+let cart=[];try{cart=JSON.parse(localStorage.getItem('damaRoseCart')||'[]');if(!Array.isArray(cart))cart=[];cart=cart.map(i=>({...i,image:''}));localStorage.setItem('damaRoseCart',JSON.stringify(cart))}catch(e){cart=[];localStorage.removeItem('damaRoseCart')}let settings={whatsapp:'92415565'};
 const content=document.getElementById('content'),badge=document.getElementById('cartBadge');const money=n=>Number(n||0).toFixed(3)+' ر.ع';
 function save(){localStorage.setItem('damaRoseCart',JSON.stringify(cart));render()}function units(){return cart.reduce((s,i)=>s+(Number(i.quantity)||0),0)}function total(){return cart.reduce((s,i)=>s+(Number(i.price)||0)*(Number(i.quantity)||0),0)}function changeQty(key,d){const i=cart.find(x=>x.key===key);if(!i)return;i.quantity=Math.max(1,(Number(i.quantity)||1)+d);save()}function removeItem(key){cart=cart.filter(i=>i.key!==key);save()}
 function cleanWhats(v){const n=String(v||'').replace(/\D/g,'');return n.length===8?'968'+n:n}
