@@ -41,11 +41,12 @@
 </div></main>
 <div class="toast" id="toast">تمت إضافة المنتج إلى السلة</div>
 <script>
-let product=null, selected=null, quantity=1;
-let cart=JSON.parse(localStorage.getItem('damaRoseCart')||'[]');
+let product=null,selected=null,quantity=1;
 const sizes=document.getElementById('sizes'),price=document.getElementById('price'),qtyEl=document.getElementById('qty');
-function cartUnits(){return cart.reduce((s,i)=>s+(Number(i.quantity)||0),0)}
-document.getElementById('cartBadge').textContent=cartUnits();
+function getCart(){try{return JSON.parse(localStorage.getItem('damaRoseCart')||'[]')}catch(e){return[]}}
+function cartUnits(){return getCart().reduce((s,i)=>s+(Number(i.quantity)||0),0)}
+function updateBadge(){document.getElementById('cartBadge').textContent=cartUnits()}
+updateBadge();
 async function load(){
  const id=new URLSearchParams(location.search).get('id');
  if(!id){document.getElementById('productTitle').textContent='المنتج غير موجود';return}
@@ -54,13 +55,24 @@ async function load(){
  product=await r.json();
  document.getElementById('productTitle').textContent=(localStorage.getItem('dr_lang')==='en'&&product.en)?product.en:product.ar;
  document.title='Dama Rose | '+((localStorage.getItem('dr_lang')==='en'&&product.en)?product.en:product.ar);
- if(product.image){const ph=document.getElementById('photo');ph.style.backgroundImage=`url("${product.image}")`;ph.style.backgroundSize='cover';ph.style.backgroundPosition='center';ph.style.backgroundColor='#efe4cf';ph.style.setProperty('--has-image','1');}
+ if(product.image){const ph=document.getElementById('photo');ph.style.backgroundImage=`url("${product.image}")`;ph.style.backgroundSize='cover';ph.style.backgroundPosition='center';ph.style.backgroundColor='#efe4cf';}
  sizes.innerHTML='';
- (product.variants||[]).forEach((opt,i)=>{const b=document.createElement('button');b.className='size';b.textContent=opt.size;b.onclick=()=>{selected=i;[...sizes.children].forEach(x=>x.classList.remove('active'));b.classList.add('active');price.textContent=Number(opt.price).toFixed(3)+' ر.ع'};sizes.appendChild(b)});if((product.variants||[]).length){selected=0;const first=sizes.children[0];if(first)first.classList.add('active');price.textContent=Number(product.variants[0].price).toFixed(3)+' ر.ع';}
+ (product.variants||[]).forEach((opt,i)=>{const b=document.createElement('button');b.type='button';b.className='size';b.textContent=opt.size;b.addEventListener('click',()=>{selected=i;[...sizes.children].forEach(x=>x.classList.remove('active'));b.classList.add('active');price.textContent=Number(opt.price).toFixed(3)+' ر.ع'});sizes.appendChild(b)});
+ if((product.variants||[]).length){selected=0;sizes.children[0]?.classList.add('active');price.textContent=Number(product.variants[0].price).toFixed(3)+' ر.ع'}
 }
 document.getElementById('plus').onclick=()=>{quantity++;qtyEl.textContent=quantity};
 document.getElementById('minus').onclick=()=>{if(quantity>1){quantity--;qtyEl.textContent=quantity}};
-document.getElementById('addBtn').onclick=()=>{if(!product)return;if(selected===null){price.textContent='اختر الحجم';return}const opt=product.variants[selected];const key=String(product.id)+'|'+String(opt.size);const existingIndex=cart.findIndex(i=>String(i.productId)===String(product.id)&&String(i.option)===String(opt.size));if(existingIndex>=0)cart[existingIndex].quantity=(Number(cart[existingIndex].quantity)||0)+quantity;else cart.push({key,productId:product.id,name:product.ar,nameEn:product.en||'',option:opt.size,price:Number(opt.price),quantity,image:product.image||''});localStorage.setItem('damaRoseCart',JSON.stringify(cart));document.getElementById('cartBadge').textContent=cartUnits();quantity=1;qtyEl.textContent=quantity;const toast=document.getElementById('toast');toast.classList.add('show');setTimeout(()=>toast.classList.remove('show'),1500)};
+document.getElementById('addBtn').onclick=()=>{
+ if(!product||selected===null)return;
+ const opt=product.variants[selected],cart=getCart();
+ const key=String(product.id)+'|'+String(opt.size);
+ const same=cart.find(i=>String(i.productId)===String(product.id)&&String(i.option)===String(opt.size));
+ if(same)same.quantity=(Number(same.quantity)||0)+quantity;
+ else cart.push({key,productId:product.id,name:product.ar,nameEn:product.en||'',option:opt.size,price:Number(opt.price),quantity,image:product.image||''});
+ localStorage.setItem('damaRoseCart',JSON.stringify(cart));
+ updateBadge();quantity=1;qtyEl.textContent='1';
+ const toast=document.getElementById('toast');toast.textContent='تمت إضافة '+opt.size+' إلى السلة';toast.classList.add('show');setTimeout(()=>toast.classList.remove('show'),1500);
+};
 load();
 </script>
 <script src="/lang.js"></script>
