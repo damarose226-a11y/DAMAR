@@ -1,0 +1,11 @@
+<!doctype html>
+<html lang="ar" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>تغيير كلمة مرور الإدارة | Dama Rose</title>
+<style>body{margin:0;font-family:Tahoma,Arial,sans-serif;background:linear-gradient(135deg,#17483c,#2e6a59);min-height:100vh;display:grid;place-items:center;color:#17362c;padding:20px;box-sizing:border-box}.card{width:min(420px,100%);background:#fffaf1;border:1px solid #c9a865;border-radius:24px;padding:26px;box-sizing:border-box}.logo{height:90px;display:block;margin:0 auto 12px}h1{text-align:center;font-size:23px}.field{display:grid;gap:7px;margin-top:14px}input{font:inherit;padding:13px;border:1px solid #d5c29a;border-radius:12px;background:white}button{width:100%;margin-top:18px;padding:13px;border:0;border-radius:12px;background:#17483c;color:white;font:inherit;font-weight:bold}.msg{margin-top:12px;text-align:center;font-size:13px}.note{font-size:13px;opacity:.7;line-height:1.7;text-align:center}</style></head>
+<body><div class="card"><img class="logo" src="../logo.png" alt="Dama Rose"><h1>تغيير كلمة مرور المدير</h1><p class="note">لأمان لوحة الإدارة، افتح هذه الصفحة وأنت مسجل دخولًا بحساب المدير الرئيسي.</p>
+<div class="field"><label>كلمة المرور الجديدة</label><input id="p1" type="password" autocomplete="new-password"></div>
+<div class="field"><label>تأكيد كلمة المرور</label><input id="p2" type="password" autocomplete="new-password"></div>
+<button id="save">حفظ كلمة المرور الجديدة</button><div class="msg" id="msg"></div></div>
+<script>
+save.onclick=async()=>{msg.textContent='';const a=p1.value,b=p2.value;if(a.length<8){msg.textContent='كلمة المرور يجب أن تكون 8 أحرف على الأقل';return}if(a!==b){msg.textContent='كلمتا المرور غير متطابقتين';return}save.disabled=true;try{const r=await fetch('/api/auth/reset-password',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({password:a})});if(r.ok){msg.textContent='تم تغيير كلمة المرور. سيتم تحويلك لصفحة الدخول.';setTimeout(()=>location.href='/admin/',1200)}else if(r.status===401){msg.textContent='يلزم تسجيل الدخول أولاً بحساب المدير الرئيسي.'}else{msg.textContent='تعذر تغيير كلمة المرور.'}}catch(e){msg.textContent='تعذر الاتصال بالخادم.'}finally{save.disabled=false}};
+</script></body></html>
