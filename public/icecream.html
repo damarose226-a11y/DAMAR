@@ -22,7 +22,7 @@ footer{background:#061f19;color:#e5dbc6;padding:26px 0;text-align:center}
 <body>
 <header class="topbar"><div class="container nav"><a class="cart" href="cart.html" aria-label="السلة"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3.5 5h2l1.7 9.1a2 2 0 0 0 2 1.6h7.6a2 2 0 0 0 1.9-1.4L20.5 8H6.1"/><path d="M9.5 19.5h.01M17.5 19.5h.01"/></svg></a><a class="back" href="index.html#products">← كل الأقسام</a></div></header>
 <section class="hero"><div class="hero-cover" id="heroCover"></div><div class="container hero-content"><h1>بوظة</h1><p>بوظة بنكهات مختارة وتقديم مميز من داما روز.</p></div></section>
-<main class="section"><div class="container"><div class="section-head"><div><h2>منتجات بوظة</h2><div class="muted">اختر المنتج لعرض التفاصيل والأحجام والأسعار</div></div></div><div class="products" id="grid"><div class="empty">يتم تحميل المنتجات...</div></div></div></main>
+<main class="section"><div class="container"><div class="section-head"><div><h2>منتجات بوظة</h2><div class="muted">اختر المنتج لعرض التفاصيل والأحجام والأسعار</div></div></div><div class="products" id="grid"></div></div></main>
 <footer>© Dama Rose — جميع الحقوق محفوظة</footer>
 <script>
 const CATEGORY="بوظة";
@@ -33,7 +33,7 @@ function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&l
 function card(p){const img=p.image?' style="background-image:url(&quot;'+String(p.image).replace(/"/g,'&quot;')+'&quot;)"':'';return '<article class="card"><div class="ph"'+img+'></div><div class="card-body"><div class="name">'+esc(p.ar)+'</div><div class="price">ابتداءً من '+money(minPrice(p))+'</div><a class="add" href="product.html?id='+encodeURIComponent(p.id)+'">عرض المنتج</a></div></article>'}
 function cachedProducts(){try{const x=JSON.parse(localStorage.getItem('damaRoseProducts')||'[]');return Array.isArray(x)?x:[]}catch{return []}}
 function render(items){const xs=items.filter(p=>p.category===CATEGORY);grid.innerHTML=xs.length?xs.map(card).join(''):'<div class="empty">لا توجد منتجات في هذا القسم حاليًا.</div>'}
-async function load(){const cached=cachedProducts();if(cached.length)render(cached);try{const [pr,sr]=await Promise.all([fetch('/api/products',{cache:'no-store'}),fetch('/api/settings')]);if(pr.ok){const products=await pr.json();if(Array.isArray(products)){localStorage.setItem('damaRoseProducts',JSON.stringify(products));render(products)}}if(sr.ok){const s=await sr.json();if(s[COVER_KEY])heroCover.style.backgroundImage='url("'+String(s[COVER_KEY]).replace(/"/g,'%22')+'")'}}catch(e){if(!cached.length)grid.innerHTML='<div class="empty">تعذر تحميل المنتجات.</div>'}}
-const instant=cachedProducts();if(instant.length)render(instant);load();
+async function load(){const cached=cachedProducts();if(cached.length)render(cached);try{const pr=await fetch('/api/snapshot',{cache:'no-store'});if(pr.ok){const snap=await pr.json();const products=Array.isArray(snap.products)?snap.products:[];const s=snap.settings||{};if(products.length){localStorage.setItem('damaRoseProducts',JSON.stringify(products));render(products)}localStorage.setItem('damaRoseSettings',JSON.stringify(s));if(s[COVER_KEY])heroCover.style.backgroundImage='url("'+String(s[COVER_KEY]).replace(/"/g,'%22')+'")'}}catch(e){if(!cached.length)grid.innerHTML='<div class="empty">تعذر تحميل المنتجات.</div>'}}
+const instant=cachedProducts();if(instant.length)render(instant);try{const ss=JSON.parse(localStorage.getItem('damaRoseSettings')||'{}');if(ss[COVER_KEY])heroCover.style.backgroundImage='url("'+String(ss[COVER_KEY]).replace(/"/g,'%22')+'")'}catch{}load();
 </script>
 </body></html>
