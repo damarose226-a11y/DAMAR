@@ -33,6 +33,11 @@ function getCookie(req, name) {
 }
 
 app.use('/api', async (req, res) => {
+  if (req.method === 'GET' && req.path === '/products') {
+    res.setHeader('Cache-Control', 'public, s-maxage=300, stale-while-revalidate=86400');
+  } else if (req.method === 'GET') {
+    res.setHeader('Cache-Control', 'public, s-maxage=120, stale-while-revalidate=3600');
+  }
   if (!SUPABASE_URL || !SUPABASE_KEY) {
     return res.status(503).json({ error: 'supabase_not_configured' });
   }
