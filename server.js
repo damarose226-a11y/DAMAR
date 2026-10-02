@@ -44,7 +44,7 @@ app.use('/api', async (req, res) => {
 
   try {
     const headers = {
-      'accept': 'application/json',
+      'accept': req.method === 'GET' ? '*/*' : 'application/json',
       'content-type': 'application/json',
       'apikey': SUPABASE_KEY,
       'authorization': 'Bearer ' + SUPABASE_KEY,
