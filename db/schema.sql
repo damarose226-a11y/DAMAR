@@ -28,7 +28,7 @@ CREATE TABLE IF NOT EXISTS products (
   id UUID PRIMARY KEY,
   name_ar TEXT NOT NULL,
   name_en TEXT NOT NULL DEFAULT '',
-  category TEXT NOT NULL CHECK (category IN ('بقلاوات','قشاطي','كنافة','نواشف','بوظة')),
+  category TEXT NOT NULL CHECK (category IN ('بقلاوات','قشاطي','كنافة','نواشف','بوظة','هدايا داما روز')),
   image_data TEXT NOT NULL DEFAULT '',
   is_pick BOOLEAN NOT NULL DEFAULT FALSE,
   is_visible BOOLEAN NOT NULL DEFAULT TRUE,
@@ -62,7 +62,7 @@ CREATE TABLE IF NOT EXISTS settings (
 
 ALTER TABLE products DROP CONSTRAINT IF EXISTS products_category_check;
 ALTER TABLE products ADD CONSTRAINT products_category_check
-CHECK (category IN ('بقلاوات','قشاطي','كنافة','نواشف','بوظة'));
+CHECK (category IN ('بقلاوات','قشاطي','كنافة','نواشف','بوظة','هدايا داما روز'));
 
 CREATE INDEX IF NOT EXISTS idx_sessions_expires_at ON sessions(expires_at);
 CREATE INDEX IF NOT EXISTS idx_sessions_admin_id ON sessions(admin_id);

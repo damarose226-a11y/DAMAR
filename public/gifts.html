@@ -10,11 +10,19 @@
 </style><link rel="stylesheet" href="/storefront.css?v=20261002"></head><body>
 <header class="topbar"><div class="container nav"><a class="back" href="index.html">العودة للرئيسية ←</a></div></header>
 <section class="hero" id="heroCover"><h1>هدايا داما روز</h1><p>تشكيلة هدايا راقية من داما روز للمناسبات والضيافة.</p></section>
-<main class="page"><div class="container"><div class="empty"><div><b>هدايا داما روز</b><span>ستظهر منتجات الهدايا هنا.</span></div></div></div></main>
+<main class="page"><div class="container"><div class="products" id="grid"></div></div></main>
 <script>
+const CATEGORY='هدايا داما روز';
 const COVER_KEY='category_image_gifts';
+const money=n=>Number(n||0).toFixed(3)+' ر.ع';
+function minPrice(p){const xs=(p.variants||[]).map(v=>Number(v.price));return xs.length?Math.min(...xs):0}
+function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function card(p){const img=p.image?' style="background-image:url(&quot;'+String(p.image).replace(/"/g,'&quot;')+'&quot;)"':'';return '<article class="card"><div class="ph"'+img+'></div><div class="card-body"><div class="name">'+esc(p.ar)+'</div><div class="price">ابتداءً من '+money(minPrice(p))+'</div><a class="add" href="product.html?id='+encodeURIComponent(p.id)+'">عرض المنتج</a></div></article>'}
+function cachedProducts(){try{const x=JSON.parse(localStorage.getItem('damaRoseProducts')||'[]');return Array.isArray(x)?x:[]}catch{return []}}
 function applyCover(s){const v=s&&s[COVER_KEY];if(v)heroCover.style.backgroundImage="linear-gradient(120deg,rgba(23,72,60,.72),rgba(34,92,77,.72)),url('"+String(v).replace(/'/g,"%27")+"')"}
+function render(items){const xs=items.filter(p=>p.category===CATEGORY);grid.innerHTML=xs.length?xs.map(card).join(''):'<div class="empty"><div><b>هدايا داما روز</b><span>لا توجد منتجات في هذا القسم حاليًا.</span></div></div>'}
+async function load(){const cached=cachedProducts();if(cached.length)render(cached);try{const res=await fetch('/api/snapshot',{cache:'no-store'});if(!res.ok)throw new Error('snapshot_failed');const snap=await res.json();const products=Array.isArray(snap.products)?snap.products:[];const settings=snap.settings||{};localStorage.setItem('damaRoseProducts',JSON.stringify(products));localStorage.setItem('damaRoseSettings',JSON.stringify(settings));render(products);applyCover(settings)}catch(e){if(!cached.length)grid.innerHTML='<div class="empty"><div><b>هدايا داما روز</b><span>تعذر تحميل المنتجات، حاول مرة أخرى.</span></div></div>'}}
 try{applyCover(JSON.parse(localStorage.getItem('damaRoseSettings')||'{}'))}catch{}
-fetch('/api/snapshot',{cache:'no-store'}).then(r=>r.ok?r.json():null).then(s=>{if(!s)return;localStorage.setItem('damaRoseSettings',JSON.stringify(s.settings||{}));applyCover(s.settings||{})}).catch(()=>{});
+load();
 </script>
 </body></html>
