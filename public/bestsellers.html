@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Dama Rose | الأكثر مبيعًا</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/storefront.css?v=20261002">
+<style>
+:root{--green:#17483c;--cream:#f5ecdf;--ink:#23483e}
+*{box-sizing:border-box}body{margin:0;background:var(--cream);color:var(--ink);font-family:Tajawal,sans-serif}a{text-decoration:none;color:inherit}
+.topbar{position:sticky;top:0;z-index:20;background:rgba(23,72,60,.97);border-bottom:1px solid rgba(215,180,119,.5);backdrop-filter:blur(10px)}
+.nav{width:min(1120px,94%);height:64px;margin:auto;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.menu{display:flex;align-items:center;gap:24px;color:#f3e7cb}.menu a:hover{color:#d7b477}
+.tools{display:flex;align-items:center;gap:10px}.lang{color:#f3e7cb;border:1px solid rgba(215,180,119,.7);padding:7px 12px;border-radius:999px}
+.cart{color:#f3e7cb;display:grid;place-items:center}.cart svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.hero{background:linear-gradient(120deg,#17483c,#225c4d);color:#fff;padding:58px 0 48px}
+.container{width:min(1120px,94%);margin:auto}.eyebrow{color:#d7b477;font-size:14px;margin-bottom:10px}.hero h1{margin:0;font-size:clamp(32px,5vw,52px);color:#f5e7c6}.hero p{margin:12px 0 0;line-height:1.8;color:#eee2cd}
+main{min-height:55vh}.products{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:18px;padding:42px 0 72px}
+.card{overflow:hidden;background:#fffaf1;border:1px solid #dfc99d;border-radius:18px;box-shadow:0 8px 24px rgba(40,32,18,.07);color:var(--ink)}
+.ph{height:210px;background:linear-gradient(135deg,#e5d5b6,#c7ad7f);background-size:cover;background-position:center}
+.card-body{padding:15px}.name{font-size:17px;font-weight:700;margin-bottom:8px}.price{color:#8b6a2d;font-weight:700}.card-foot{margin-top:14px}.view{display:block;text-align:center;padding:11px 14px;border-radius:11px;background:var(--green);color:white}
+.empty{grid-column:1/-1;text-align:center;padding:46px 18px;border:1px dashed #c9ad7b;border-radius:18px;color:#70634f;background:#fffaf1}
+footer{background:#123a31;color:#f2e8d8;padding:20px 0;text-align:center;font-size:13px}
+@media(max-width:900px){.products{grid-template-columns:repeat(2,minmax(0,1fr))}.menu{gap:12px;font-size:14px}}
+@media(max-width:560px){.menu a:not(:first-child){display:none}.hero{padding:42px 0}.products{gap:12px;padding:26px 0 48px}.ph{height:155px}.name{font-size:15px}.card-body{padding:12px}}
+</style>
+</head>
+<body>
+<header class="topbar"><div class="nav"><nav class="menu"><a href="index.html">الرئيسية</a><a href="index.html#products">المنتجات</a><a href="bestsellers.html">الأكثر مبيعًا</a></nav><div class="tools"><a class="lang" href="#">EN | AR</a><a class="cart" href="cart.html" aria-label="السلة"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3.5 5h2l1.7 9.1a2 2 0 0 0 2 1.6h7.6a2 2 0 0 0 1.9-1.4L20.5 8H6.1"/><path d="M9.5 19.5h.01M17.5 19.5h.01"/></svg></a></div></div></header>
+<section class="hero"><div class="container"><div class="eyebrow">★ داما روز</div><h1>الأكثر مبيعًا</h1><p>تظهر هنا المنتجات التي تحددها كالأكثر مبيعًا من لوحة الإدارة.</p></div></section>
+<main class="container"><div class="products" id="bestGrid"><div class="empty">جاري تحميل المنتجات...</div></div></main>
+<footer><div class="container"><a href="index.html">العودة للرئيسية</a></div></footer>
+<script>
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const price=p=>{const xs=(p.variants||[]).map(v=>Number(v.price)).filter(Number.isFinite);return xs.length?Math.min(...xs).toFixed(3)+' ر.ع':''};
+function render(products){const xs=products.filter(p=>p.pick);const grid=document.getElementById('bestGrid');grid.innerHTML=xs.length?xs.map(p=>'<article class="card">'+(p.image?'<div class="ph" style="background-image:url(\''+String(p.image).replace(/'/g,'%27')+'\')"></div>':'<div class="ph"></div>')+'<div class="card-body"><div class="name">'+esc(p.ar)+'</div><div class="price">ابتداءً من '+price(p)+'</div><div class="card-foot"><a class="view" href="product.html?id='+encodeURIComponent(p.id)+'">اكتشف المنتج</a></div></div></article>').join(''):'<div class="empty">لا توجد منتجات في الأكثر مبيعًا حاليًا.</div>'}
+async function load(){try{const r=await fetch('/api/snapshot?fresh='+Date.now(),{cache:'no-store'});if(!r.ok)throw new Error();const data=await r.json();render(Array.isArray(data.products)?data.products:[])}catch(e){let cached=[];try{cached=JSON.parse(localStorage.getItem('damaRoseProducts')||'[]')}catch{}render(Array.isArray(cached)?cached:[])}}
+load();
+</script><script src="/lang.js"></script>
+</body></html>
