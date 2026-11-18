@@ -16,31 +16,22 @@
 .cart{color:#f3e7cb;display:grid;place-items:center}.cart svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
 .hero{background:linear-gradient(120deg,#17483c,#225c4d);color:#fff;padding:48px 0 40px}.container{width:min(1000px,94%);margin:auto}
 .eyebrow{color:#d7b477;font-size:14px;margin-bottom:8px}.hero h1{margin:0;font-size:clamp(32px,5vw,48px);color:#f5e7c6}.hero p{margin:10px 0 0;line-height:1.8;color:#eee2cd}
-.filters{display:flex;gap:8px;overflow:auto;padding:20px 0 4px;scrollbar-width:thin}
-.filters button{white-space:nowrap;border:1px solid #c5a66d;border-radius:999px;background:#fffaf1;color:#23483e;padding:9px 16px;cursor:pointer}
-.filters button.active{background:#17483c;color:#fff;border-color:#17483c}
-.groups{display:grid;gap:18px;padding:18px 0 64px}.group{background:#fffaf1;border:1px solid var(--line);border-radius:18px;padding:18px 20px;box-shadow:0 7px 20px rgba(35,50,35,.04)}
-.group-head{display:flex;align-items:center;justify-content:space-between;gap:12px;padding-bottom:12px;border-bottom:1px solid #eadcc0}.group-head h2{margin:0;color:#17483c;font-size:22px}.count{font-size:12px;color:#86652e;background:#f3e8d3;border-radius:999px;padding:5px 10px}
-.items{display:grid}.item{display:grid;grid-template-columns:minmax(160px,1fr) auto;gap:14px;align-items:center;padding:14px 2px;border-bottom:1px dashed #dfd0b1}.item:last-child{border-bottom:0}.item-name{font-weight:700}.item-en{font-size:12px;color:#84745b;margin-top:3px}.variants{display:flex;flex-wrap:wrap;gap:7px;justify-content:flex-end}.variant{white-space:nowrap;padding:6px 10px;border-radius:10px;background:#f6eedf;border:1px solid #e4d5b7;color:#69552f;font-size:13px;font-weight:700}
-.empty{text-align:center;padding:20px;color:#83745e}.empty-all{text-align:center;padding:46px 18px;border:1px dashed #c9ad7b;border-radius:18px;color:#70634f;background:#fffaf1}
+.category-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;padding:26px 0 72px}.category-item{background:#fffaf1;border:1px solid var(--line);border-radius:16px;padding:20px 22px;color:#17483c;font-size:20px;font-weight:700;box-shadow:0 7px 20px rgba(35,50,35,.04)}.category-item:before{content:"";display:inline-block;width:8px;height:8px;margin-left:12px;border-radius:50%;background:#b88a54;vertical-align:middle}.empty-all{text-align:center;padding:46px 18px;border:1px dashed #c9ad7b;border-radius:18px;color:#70634f;background:#fffaf1}
+@media(max-width:560px){.category-list{grid-template-columns:1fr;gap:10px;padding:18px 0 48px}.category-item{padding:16px 18px;font-size:18px}}
 footer{background:#123a31;color:#f2e8d8;padding:20px 0;text-align:center;font-size:13px}
-@media(max-width:760px){.group{padding:15px}.item{grid-template-columns:1fr;gap:8px}.variants{justify-content:flex-start}.group-head h2{font-size:20px}}
-@media(max-width:560px){.menu a:not(:first-child){display:none}.hero{padding:38px 0 32px}.filters{margin-inline:-3%;padding-inline:3%}.groups{padding-top:14px}.item{padding:12px 0}.variant{font-size:12px}}
+@media(max-width:560px){.menu a:not(:first-child){display:none}.hero{padding:38px 0 32px}}
 </style>
 </head>
 <body>
 <header class="topbar"><div class="nav"><nav class="menu"><a href="index.html">الرئيسية</a><a href="index.html#products">المنتجات</a><a href="bestsellers.html">الأكثر مبيعًا</a><a href="menu.html">المنيو</a></nav><div class="tools"><a class="lang" href="#">EN | AR</a><a class="cart" href="cart.html" aria-label="السلة"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3.5 5h2l1.7 9.1a2 2 0 0 0 2 1.6h7.6a2 2 0 0 0 1.9-1.4L20.5 8H6.1"/><path d="M9.5 19.5h.01M17.5 19.5h.01"/></svg></a></div></div></header>
-<section class="hero"><div class="container"><div class="eyebrow">داما روز</div><h1>منيو داما روز</h1><p>عرض قائمة الأصناف حسب الأقسام، مع الأحجام والأسعار.</p></div></section>
-<main class="container"><div class="filters" id="filters" aria-label="أقسام المنيو"></div><div class="groups" id="menuGroups"><div class="empty-all">جاري تحميل المنتجات...</div></div></main>
+<section class="hero"><div class="container"><div class="eyebrow">داما روز</div><h1>منيو داما روز</h1><p>الأقسام الرئيسية للمنيو.</p></div></section>
+<main class="container"><div class="category-list" id="menuCategories"><div class="empty-all">جاري تحميل الأقسام...</div></div></main>
 <footer><div class="container"><a href="index.html">العودة للرئيسية</a></div></footer>
 <script>
-const CATS=['بقلاوات','قشاطي','كنافة','نواشف','بوظة','هدايا داما روز'];
+const DEFAULT_CATEGORIES=['بقلاوات','قشاطي','كنافة','نواشف','بوظة','هدايا داما روز'];
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-let allProducts=[],active='all';
-function renderFilters(){const root=document.getElementById('filters');root.innerHTML=[['all','كل الأقسام'],...CATS.map(c=>[c,c])].map(([key,label])=>'<button type="button" class="'+(active===key?'active':'')+'" aria-pressed="'+(active===key)+'" data-category="'+esc(key)+'">'+esc(label)+'</button>').join('');root.querySelectorAll('button').forEach(b=>b.onclick=()=>{active=b.dataset.category;renderFilters();renderGroups()})}
-function renderGroups(){const groups=document.getElementById('menuGroups');const cats=active==='all'?CATS:CATS.filter(c=>c===active);const visible=allProducts;groups.innerHTML=cats.map(category=>{const items=visible.filter(p=>p.category===category);return '<section class="group"><div class="group-head"><h2>'+esc(category)+'</h2><span class="count">'+items.length+'</span></div>'+(items.length?'<div class="items">'+items.map(p=>{const variants=(p.variants||[]).map(v=>'<span class="variant">'+esc(v.size)+' · '+Number(v.price).toFixed(3)+' ر.ع</span>').join('');return '<article class="item"><div><div class="item-name">'+esc(p.ar)+'</div>'+(p.en?'<div class="item-en" dir="ltr">'+esc(p.en)+'</div>':'')+'</div><div class="variants">'+(variants||'<span class="empty">لا توجد أحجام وأسعار مسجلة</span>')+'</div></article>'}).join('')+'</div>':'<div class="empty">لا توجد منتجات في هذا القسم حاليًا.</div>')+'</section>'}).join('');if(!visible.length)groups.innerHTML='<div class="empty-all">لا توجد منتجات متاحة حاليًا.</div>'}
-function setProducts(products){allProducts=Array.isArray(products)?products:[];renderGroups()}
-async function load(){try{const r=await fetch('/api/snapshot?fresh='+Date.now(),{cache:'no-store'});if(!r.ok)throw new Error();const data=await r.json();localStorage.setItem('damaRoseProducts',JSON.stringify(data.products||[]));setProducts(data.products)}catch(e){try{setProducts(JSON.parse(localStorage.getItem('damaRoseProducts')||'[]'))}catch{setProducts([])}}}
-renderFilters();load();
+function renderCategories(value){const names=Array.isArray(value)?value:DEFAULT_CATEGORIES;const list=names.map(x=>String(x||'').trim()).filter(Boolean);document.getElementById('menuCategories').innerHTML=list.length?list.map(x=>'<div class="category-item">'+esc(x)+'</div>').join(''):'<div class="empty-all">لا توجد أقسام في المنيو حاليًا.</div>'}
+async function loadCategories(){try{const r=await fetch('/api/menu-categories?fresh='+Date.now(),{cache:'no-store'});if(!r.ok)throw new Error();const data=await r.json();renderCategories(data.categories)}catch(e){renderCategories(DEFAULT_CATEGORIES)}}
+loadCategories();
 </script><script src="/lang.js"></script>
 </body></html>
