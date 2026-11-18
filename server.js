@@ -34,7 +34,7 @@ function getCookie(req, name) {
 
 app.use('/api', async (req, res) => {
   const noStore = req.path.startsWith('/admin/') || req.path.startsWith('/auth/') ||
-    req.path.startsWith('/setup/') || req.path === '/settings' || req.path === '/snapshot' || req.path === '/menu-categories';
+    req.path.startsWith('/setup/') || req.path === '/settings' || req.path === '/snapshot';
   if (noStore) {
     res.setHeader('Cache-Control', 'private, no-store, max-age=0');
     res.setHeader('Vary', 'Cookie');
