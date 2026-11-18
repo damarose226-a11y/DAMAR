@@ -1,7 +1,7 @@
 (()=> {
 const D={
-"الرئيسية":"Home","المنتجات":"Products","العروض":"Offers","من نحن":"About us","تواصل معنا":"Contact us",
-"حلويات عربية فاخرة • مسقط":"Luxury Arabic sweets • Muscat",
+"الرئيسية":"Home","المنتجات":"Products","المنيو":"Menu","المنيو والأسعار":"Menu & prices","العروض":"Offers","من نحن":"About us","تواصل معنا":"Contact us",
+"حلويات عربية فاخرة • مسقط":"Luxury Arabic sweets • Muscat","منيو داما روز":"Dama Rose menu","جميع أصنافنا وأسعارها في قائمة مرتبة وسهلة التصفح.":"All our items and prices in one clear, easy-to-browse menu.","اختر القسم":"Choose a section","الأسعار بالريال العُماني":"Prices in Omani rial","حلويات عربية فاخرة بطابع شامي أصيل":"Luxury Arabic sweets with an authentic Levantine character",
 "مذاق أصيل...":"Authentic taste...","بروح التراث الشامي":"with the spirit of Damascus",
 "تجربة راقية تجمع بين وصفاتنا التقليدية، جودة المكونات، والتقديم الفاخر الذي يليق بكل مناسبة.":"A refined experience combining traditional recipes, quality ingredients, and elegant presentation for every occasion.",
 "تسوق الآن ←":"Shop now ←","استكشف المنتجات":"Explore products","جودة عالية":"High quality","مكونات مختارة بعناية":"Carefully selected ingredients",

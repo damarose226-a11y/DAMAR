@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>المنيو والأسعار | Dama Rose</title>
+<link rel="manifest" href="/manifest.webmanifest">
+<link rel="apple-touch-icon" href="/logo.png">
+<meta name="theme-color" content="#17483c">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--green:#17483c;--green2:#225c4d;--cream:#f5ecdf;--paper:#fffaf1;--gold:#b88a54;--gold2:#d7b477;--ink:#23483e;--line:#dfc99d}
+*{box-sizing:border-box}html{scroll-behavior:smooth;scroll-padding-top:98px}body{margin:0;font-family:Tajawal,Tahoma,Arial,sans-serif;background:var(--cream);color:var(--ink)}a{text-decoration:none;color:inherit}.container{width:min(1120px,92%);margin:auto}
+.topbar{position:sticky;top:0;z-index:30;background:rgba(23,72,60,.98);border-bottom:1px solid rgba(215,180,119,.36);backdrop-filter:blur(10px)}.nav{height:72px;display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:26px;direction:ltr}.brand{display:flex;align-items:center}.brand img{height:64px;width:90px;object-fit:contain}.menu{display:flex;justify-content:center;gap:23px;direction:rtl;color:#f3e7cb;font-size:14px}.menu a{padding:25px 0 20px;border-bottom:2px solid transparent}.menu a.active,.menu a:hover{color:var(--gold2);border-color:var(--gold2)}.tools{display:flex;align-items:center;gap:10px}.lang,.cart{border:1px solid rgba(215,180,119,.55);color:#f3e7cb;border-radius:999px;padding:8px 12px}.cart{width:41px;height:41px;padding:0;display:grid;place-items:center;position:relative}.cart svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.8}.badge{position:absolute;right:-5px;top:-7px;background:var(--gold2);color:var(--green);min-width:18px;height:18px;border-radius:999px;display:grid;place-items:center;font-size:10px;font-weight:800}
+.hero{background:radial-gradient(circle at 15% 25%,rgba(215,180,119,.16),transparent 24%),linear-gradient(135deg,var(--green),var(--green2));color:white;padding:68px 0 62px;position:relative;overflow:hidden}.hero:after{content:"";position:absolute;inset:0;background-image:linear-gradient(rgba(215,180,119,.055) 1px,transparent 1px),linear-gradient(90deg,rgba(215,180,119,.055) 1px,transparent 1px);background-size:38px 38px;opacity:.36}.hero-copy{position:relative;z-index:1;text-align:center}.eyebrow{color:var(--gold2);font-size:14px;margin-bottom:10px}.hero h1{font-size:48px;line-height:1.2;color:#f4dfb5;margin:0}.hero p{font-size:18px;line-height:1.9;color:#e8decb;max-width:650px;margin:14px auto 0}
+.index-wrap{position:sticky;top:72px;z-index:20;background:rgba(245,236,223,.94);border-bottom:1px solid var(--line);backdrop-filter:blur(9px)}.menu-index{display:flex;gap:9px;overflow:auto;padding:13px 0;scrollbar-width:none}.menu-index::-webkit-scrollbar{display:none}.menu-index a{white-space:nowrap;border:1px solid #d2b27a;background:#fffaf1;color:#365b50;border-radius:999px;padding:8px 14px;font-size:13px}.menu-index a:hover{background:var(--green);color:white;border-color:var(--green)}
+.content{padding:48px 0 66px}.content-head{display:flex;align-items:end;justify-content:space-between;gap:20px;margin-bottom:24px}.content-head h2{margin:0;font-size:30px}.note{font-size:13px;color:#755c35;background:#eee0c6;border:1px solid #dcc18f;border-radius:999px;padding:8px 13px}.menu-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px;align-items:start}.menu-section{background:var(--paper);border:1px solid var(--line);border-radius:20px;overflow:hidden;box-shadow:0 12px 32px rgba(45,54,41,.07)}.section-title{background:linear-gradient(135deg,#17483c,#2e6a59);color:#f4dfb5;padding:18px 20px;display:flex;align-items:center;justify-content:space-between;gap:10px}.section-title h3{margin:0;font-size:22px}.section-title span{font-size:12px;color:#d9c8a7}.items{padding:5px 18px 10px}.menu-item{display:flex;align-items:center;justify-content:space-between;gap:18px;padding:14px 2px;border-bottom:1px solid #eadfc8}.menu-item:last-child{border-bottom:0}.item-name{font-weight:700;line-height:1.55}.item-price{min-width:112px;text-align:end;color:#835c27}.item-price strong{display:block;font-size:20px;line-height:1.1}.item-price small{display:block;font-size:11px;margin-top:4px;color:#7a6a50}.empty{grid-column:1/-1;text-align:center;padding:45px;border:1px dashed #c9ab77;border-radius:18px;background:#fffaf1}.menu-error{color:#8d2c2c}
+footer{background:#061f19;color:#e5dbc6;border-top:2px solid var(--gold);padding:32px 0 0}.footer-row{display:flex;align-items:center;justify-content:space-between;gap:24px}.footer-logo{display:flex;align-items:center;gap:14px}.footer-logo img{height:72px}.footer-links{display:flex;gap:18px;flex-wrap:wrap;color:#ded1b9;font-size:14px}.copy{margin-top:24px;padding:15px 0;background:var(--gold);color:#17362c;text-align:center;font-size:12px}
+@media(max-width:860px){.nav{grid-template-columns:auto 1fr}.menu{display:none}.tools{justify-self:end}.menu-grid{grid-template-columns:1fr}.hero h1{font-size:40px}}
+@media(max-width:560px){.container{width:min(94%,520px)}.nav{height:64px;gap:8px}.brand img{height:58px;width:78px}.lang{padding:7px 9px;font-size:12px}.cart{width:38px;height:38px}.hero{padding:46px 0 40px}.hero h1{font-size:34px}.hero p{font-size:15px}.index-wrap{top:64px}.content{padding:32px 0 48px}.content-head{align-items:flex-start;flex-direction:column}.content-head h2{font-size:26px}.menu-grid{gap:14px}.section-title{padding:16px}.section-title h3{font-size:20px}.items{padding:4px 14px 8px}.menu-item{padding:13px 0}.item-name{font-size:14px}.item-price{min-width:93px}.item-price strong{font-size:18px}.footer-row{align-items:flex-start;flex-direction:column}.footer-logo img{height:64px}}
+</style>
+</head>
+<body>
+<header class="topbar"><div class="container nav"><a class="brand" href="index.html" aria-label="Dama Rose"><img src="logo.png" alt="Dama Rose"></a><nav class="menu"><a href="index.html">الرئيسية</a><a href="index.html#products">المنتجات</a><a class="active" href="menu.html">المنيو</a><a href="bestsellers.html">الأكثر مبيعًا</a><a href="offers.html">العروض</a><a href="about.html">من نحن</a><a href="contact.html">تواصل معنا</a></nav><div class="tools"><a class="lang" href="#">EN | AR</a><a class="cart" href="cart.html" aria-label="السلة"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3.5 5h2l1.7 9.1a2 2 0 0 0 2 1.6h7.6a2 2 0 0 0 1.9-1.4L20.5 8H6.1"/><path d="M9.5 19.5h.01M17.5 19.5h.01"/></svg><span class="badge" id="cartBadge">0</span></a></div></div></header>
+<main>
+<section class="hero"><div class="container hero-copy"><div class="eyebrow">DAMA ROSE</div><h1>منيو داما روز</h1><p>جميع أصنافنا وأسعارها في قائمة مرتبة وسهلة التصفح.</p></div></section>
+<div class="index-wrap"><nav class="container menu-index" id="menuIndex" aria-label="اختر القسم"></nav></div>
+<section class="content"><div class="container"><div class="content-head"><div><div class="eyebrow" style="color:#8a642a">المنيو والأسعار</div><h2>اختر القسم</h2></div><div class="note">الأسعار بالريال العُماني</div></div><div class="menu-grid" id="menuGrid"></div></div></section>
+</main>
+<footer><div class="container footer-row"><div class="footer-logo"><img src="logo.png" alt="Dama Rose"><div>حلويات عربية فاخرة بطابع شامي أصيل</div></div><div class="footer-links"><a href="index.html">الرئيسية</a><a href="index.html#products">المنتجات</a><a href="bestsellers.html">الأكثر مبيعًا</a><a href="contact.html">تواصل معنا</a></div></div><div class="copy">© Dama Rose. جميع الحقوق محفوظة.</div></footer>
+<script src="/menu-data.js"></script>
+<script>
+const menuLang=()=>localStorage.getItem('dr_lang')||'ar';
+const menuEsc=value=>String(value??'').replace(/[&<>"']/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
+function validMenu(value){return Array.isArray(value)&&value.every(section=>section&&typeof section==='object'&&Array.isArray(section.items))}
+function parseMenu(raw){try{const value=typeof raw==='string'?JSON.parse(raw):raw;return validMenu(value)?value:null}catch{return null}}
+function safeId(value,index){const id=String(value||'section-'+index).replace(/[^a-zA-Z0-9_-]/g,'-');return 'menu-'+id}
+function renderMenu(data){
+  const lang=menuLang(), grid=document.getElementById('menuGrid'), index=document.getElementById('menuIndex');
+  document.documentElement.lang=lang;document.documentElement.dir=lang==='en'?'ltr':'rtl';
+  if(!data.length){grid.innerHTML='<div class="empty">لا توجد أصناف في المنيو حاليًا.</div>';index.innerHTML='';return}
+  index.innerHTML=data.map((section,i)=>'<a href="#'+safeId(section.id,i)+'">'+menuEsc(lang==='en'?(section.en||section.ar):section.ar)+'</a>').join('');
+  grid.innerHTML=data.map((section,i)=>{
+    const title=lang==='en'?(section.en||section.ar):section.ar;
+    const items=(section.items||[]).map(item=>{
+      const name=lang==='en'?(item.en||item.ar):item.ar;
+      const unit=lang==='en'?(item.unit_en||item.unit_ar):item.unit_ar;
+      return '<div class="menu-item"><div class="item-name">'+menuEsc(name)+'</div><div class="item-price"><strong>'+menuEsc(item.price)+' '+(lang==='en'?'OMR':'ر.ع')+'</strong><small>'+menuEsc(unit||'')+'</small></div></div>';
+    }).join('');
+    return '<article class="menu-section" id="'+safeId(section.id,i)+'"><div class="section-title"><h3>'+menuEsc(title)+'</h3><span>'+(section.items||[]).length+'</span></div><div class="items">'+items+'</div></article>';
+  }).join('');
+}
+async function loadMenu(){
+  const defaults=Array.isArray(window.DAMA_MENU_DEFAULT)?window.DAMA_MENU_DEFAULT:[];
+  let cached=null;try{cached=parseMenu(localStorage.getItem('damaRoseTextMenu')||'')}catch{}
+  renderMenu(cached||defaults);
+  try{
+    const response=await fetch('/api/settings?fresh='+Date.now(),{cache:'no-store'});
+    if(!response.ok)throw new Error('menu');
+    const settings=await response.json();
+    const fresh=parseMenu(settings.menu_data)||defaults;
+    localStorage.setItem('damaRoseTextMenu',JSON.stringify(fresh));
+    renderMenu(fresh);
+  }catch(error){if(!cached&&!defaults.length)document.getElementById('menuGrid').innerHTML='<div class="empty menu-error">تعذر تحميل المنيو حاليًا.</div>'}
+}
+try{const cart=JSON.parse(localStorage.getItem('damaRoseCart')||'[]');document.getElementById('cartBadge').textContent=cart.reduce((sum,item)=>sum+(Number(item.quantity)||0),0)}catch{}
+loadMenu();
+</script>
+<script src="/lang.js"></script>
+</body>
+</html>
