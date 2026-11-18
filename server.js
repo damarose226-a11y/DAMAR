@@ -33,7 +33,12 @@ function getCookie(req, name) {
 }
 
 app.use('/api', async (req, res) => {
-  if (req.method === 'GET' && req.path === '/products') {
+  const noStore = req.path.startsWith('/admin/') || req.path.startsWith('/auth/') ||
+    req.path.startsWith('/setup/') || req.path === '/settings' || req.path === '/snapshot';
+  if (noStore) {
+    res.setHeader('Cache-Control', 'private, no-store, max-age=0');
+    res.setHeader('Vary', 'Cookie');
+  } else if (req.method === 'GET' && req.path === '/products') {
     res.setHeader('Cache-Control', 'public, s-maxage=300, stale-while-revalidate=86400');
   } else if (req.method === 'GET') {
     res.setHeader('Cache-Control', 'public, s-maxage=120, stale-while-revalidate=3600');
