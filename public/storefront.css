@@ -155,6 +155,10 @@ main,.page,.section,.featured-video{color:#F8F3E9!important;background-color:tra
   border-color:rgba(209,182,120,.22)!important;
   color:#C9C4B7!important;
 }
+.ph:not([style*="background-image"]),.photo:not([style*="background-image"]),.thumb:not([style*="background-image"]){
+  background:linear-gradient(145deg,#0A3029,#103B32)!important;
+  color:#D1B678!important;
+}
 .photo::after{border-color:rgba(209,182,120,.25)!important}
 .offer-image{background:linear-gradient(145deg,#0A3029,#103B32)!important;color:#D1B678!important}
 .tag{color:#061F1B!important;background:#D1B678!important;border:1px solid rgba(255,255,255,.15)!important}
