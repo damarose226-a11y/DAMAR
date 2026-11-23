@@ -13,7 +13,7 @@
 .topbar{position:sticky;top:0;z-index:50;background:rgba(8,42,34,.97);border-bottom:1px solid rgba(229,199,127,.3);backdrop-filter:blur(10px)}
 .nav{height:64px;display:grid;grid-template-columns:1fr auto 1fr;grid-template-areas:'tools brand spacer';align-items:center;direction:ltr}.brand{display:none}.brand img{height:54px;display:block}.tools{grid-area:tools;display:flex;gap:8px;align-items:center;justify-content:flex-start}.lang{border:1px solid rgba(229,199,127,.55);color:#f3e7cb;padding:7px 10px;border-radius:999px;font-size:12px}.cart{position:relative;width:40px;height:40px;border:1px solid rgba(229,199,127,.5);border-radius:50%;display:grid;place-items:center;color:var(--gold2);font-size:19px}.badge{position:absolute;right:-4px;top:-5px;background:var(--beige2);color:var(--green);width:19px;height:19px;border-radius:50%;display:grid;place-items:center;font-size:10px;font-weight:700}
 .page{padding:24px 0 48px}.back{display:inline-flex;align-items:center;gap:8px;color:#6f6045;font-size:14px;margin-bottom:16px}.product{background:#fbf6ec;border:1px solid var(--line);border-radius:24px;overflow:hidden;box-shadow:0 16px 50px rgba(40,32,18,.08)}
-.photo{aspect-ratio:4/3;background:linear-gradient(135deg,#d7c39d,#efe4cf);display:grid;place-items:center;position:relative}.photo:before{content:"صورة المنتج";color:#715f42;font-weight:700}.photo[style*="background-image"]:before{content:""}.photo:after{content:"";position:absolute;inset:18px;border:1px solid rgba(117,89,44,.22);border-radius:18px}
+.photo{aspect-ratio:4/3;background:linear-gradient(135deg,#d7c39d,#efe4cf);display:grid;place-items:center;position:relative}.photo:before{content:attr(data-label);color:#715f42;font-weight:700}.photo[style*="background-image"]:before{content:""}.photo:after{content:"";position:absolute;inset:18px;border:1px solid rgba(117,89,44,.22);border-radius:18px}
 .content{padding:24px}.kicker{color:#9a7439;font-size:13px;margin-bottom:6px}.title{font-size:30px;line-height:1.25;margin:0 0 18px;color:var(--green)}
 .label{font-weight:700;margin-bottom:10px}.sizes{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:22px}.size{border:1px solid #d5c092;background:#f7efdf;color:var(--ink);padding:13px 12px;border-radius:14px;cursor:pointer;font-weight:700;transition:.18s;display:flex;flex-direction:column;gap:4px;align-items:center}.size small{font-size:12px;color:#8a642a}.size:active{background:var(--green);color:#fff}.size:active small{color:#fff}
 .pricebox{display:flex;justify-content:space-between;align-items:center;padding:16px 0;border-top:1px solid #eadbc0;border-bottom:1px solid #eadbc0;margin-bottom:20px}.pricebox span{color:#796a52}.price{font-size:26px;font-weight:800;color:#8a642a}.qtyrow{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}.qty{display:flex;align-items:center;border:1px solid #d2bc8e;border-radius:14px;overflow:hidden;background:#fffaf0}.qty button{width:44px;height:44px;border:0;background:transparent;font-size:22px;color:var(--green);cursor:pointer}.qty strong{width:48px;text-align:center;font-size:18px}.add{width:100%;border:0;border-radius:16px;padding:15px 18px;background:linear-gradient(180deg,#153f34,#0a2f27);color:#fff;font-weight:800;font-size:16px;cursor:pointer;box-shadow:0 10px 25px rgba(10,47,39,.18)}.add:active{transform:translateY(1px)}
@@ -21,48 +21,64 @@
 @media(min-width:760px){.page{padding-top:36px}.product{max-width:620px;margin:auto}.content{padding:30px}.sizes{grid-template-columns:repeat(3,1fr)}}
 .cart svg{width:21px;height:21px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
 </style>
-<link rel="stylesheet" href="/storefront.css?v=20261002"></head>
+<link rel="stylesheet" href="/storefront.css?v=20261123-royal"></head>
 <body>
 <header class="topbar"><div class="container nav"><div class="tools"><a class="lang" href="#">EN | AR</a><a class="cart" href="cart.html" aria-label="السلة"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3.5 5h2l1.7 9.1a2 2 0 0 0 2 1.6h7.6a2 2 0 0 0 1.9-1.4L20.5 8H6.1"/><path d="M9.5 19.5h.01M17.5 19.5h.01"/></svg><span class="badge" id="cartBadge">0</span></a></div></div></header>
 <main class="page"><div class="container">
 <a class="back" href="index.html">← العودة للمنتجات</a>
 <article class="product">
-  <div class="photo" id="photo"></div>
+  <div class="photo" id="photo" data-label="صورة المنتج"></div>
   <div class="content">
     <div class="kicker">Dama Rose</div>
     <h1 class="title" id="productTitle">اسم المنتج</h1>
-    <div class="label">اختر الحجم وأضفه مباشرة للسلة</div>
+    <div class="label">اختر الحجم</div>
     <div class="sizes" id="sizes"></div>
-    <div class="note">يمكنك إضافة أكثر من حجم من نفس المنتج، وسيظهر كل حجم كسطر مستقل في السلة.</div>
+    <div class="pricebox"><span>السعر</span><strong class="price" id="selectedPrice">0.000 ر.ع</strong></div>
+    <div class="qtyrow"><span>الكمية</span><div class="qty"><button type="button" id="qtyMinus" aria-label="تقليل الكمية">−</button><strong id="qtyValue">1</strong><button type="button" id="qtyPlus" aria-label="زيادة الكمية">+</button></div></div>
+    <button class="add" type="button" id="addProductCart">أضف إلى السلة</button>
+    <div class="note">اختر الحجم والكمية، ثم أضف المنتج إلى السلة.</div>
   </div>
 </article>
 </div></main>
-<div class="toast" id="toast">تمت إضافة المنتج إلى السلة</div>
+<script src="/site.js?v=20261123-royal"></script>
 <script>
-let product=null;
-const sizes=document.getElementById('sizes');
-function getCart(){try{const a=JSON.parse(localStorage.getItem('damaRoseCart')||'[]');return Array.isArray(a)?a.map(i=>({...i,image:''})):[]}catch(e){return[]}}
-function cartUnits(){return getCart().reduce((s,i)=>s+(Number(i.quantity)||0),0)}
-function updateBadge(){document.getElementById('cartBadge').textContent=cartUnits()}
-function addVariant(opt){
- const cart=getCart(),key=String(product.id)+'|'+String(opt.size);
- const exact=cart.find(i=>String(i.productId)===String(product.id)&&String(i.option)===String(opt.size));
- if(exact)exact.quantity=(Number(exact.quantity)||0)+1;
- else cart.push({key,productId:String(product.id),name:product.ar,nameEn:product.en||'',option:String(opt.size),price:Number(opt.price),quantity:1,image:''});
- try{localStorage.setItem('damaRoseCart',JSON.stringify(cart))}catch(e){alert('تعذر حفظ السلة على الجهاز');return}updateBadge();
- const toast=document.getElementById('toast');toast.textContent='تمت إضافة '+opt.size+' إلى السلة';toast.classList.add('show');setTimeout(()=>toast.classList.remove('show'),1500);
+let product=null,selectedVariant=null,quantity=1;
+const sizes=document.getElementById('sizes'),title=document.getElementById('productTitle'),photo=document.getElementById('photo'),selectedPrice=document.getElementById('selectedPrice'),qtyValue=document.getElementById('qtyValue'),addButton=document.getElementById('addProductCart');
+function showError(message){title.textContent=message;sizes.replaceChildren();addButton.disabled=true;selectedPrice.textContent='—'}
+function chooseVariant(option,button){selectedVariant=option;sizes.querySelectorAll('.size').forEach(item=>item.classList.toggle('active',item===button));selectedPrice.textContent=DamaRose.money(option.price)}
+function renderProduct(){
+  title.textContent=DamaRose.productName(product);
+  photo.dataset.label=DamaRose.isEnglish()?'Product image':'صورة المنتج';
+  const image=DamaRose.safeImageUrl(product.image);
+  if(image){photo.style.backgroundImage=`url("${image.replace(/["\\\n\r]/g,encodeURIComponent)}")`;photo.style.backgroundSize='contain';photo.style.backgroundRepeat='no-repeat';photo.style.backgroundPosition='center';photo.tabIndex=0;photo.setAttribute('role','button');photo.setAttribute('aria-label',DamaRose.isEnglish()?'Enlarge product image':'تكبير صورة المنتج');photo.addEventListener('click',()=>DamaRose.openImageLightbox(image,DamaRose.productName(product)));photo.addEventListener('keydown',event=>{if(event.key==='Enter'||event.key===' '){event.preventDefault();DamaRose.openImageLightbox(image,DamaRose.productName(product))}})}
+  const productVariants=DamaRose.variants(product);
+  if(!productVariants.length){
+    const note=document.createElement('div');note.className='note';note.textContent=DamaRose.isEnglish()?'No sizes are available for this product right now.':'لا توجد أحجام متاحة لهذا المنتج حاليًا.';sizes.replaceChildren(note);return;
+  }
+  const buttons=productVariants.map(option=>{
+    const button=document.createElement('button');button.type='button';button.className='size';
+    const label=document.createElement('span');label.textContent=String(option.size);
+    const detail=document.createElement('small');detail.textContent=DamaRose.money(option.price);
+    button.append(label,detail);button.addEventListener('click',()=>chooseVariant(option,button));return button;
+  });
+  sizes.replaceChildren(...buttons);chooseVariant(productVariants[0],buttons[0]);
 }
 async function load(){
- const id=new URLSearchParams(location.search).get('id');
- if(!id)return document.getElementById('productTitle').textContent='المنتج غير موجود';
- const r=await fetch('/api/products/'+encodeURIComponent(id));if(!r.ok)return document.getElementById('productTitle').textContent='المنتج غير موجود';
- product=await r.json();document.getElementById('productTitle').textContent=(localStorage.getItem('dr_lang')==='en'&&product.en)?product.en:product.ar;
- if(product.image){const ph=document.getElementById('photo');ph.style.backgroundImage=`url("${product.image}")`;ph.style.backgroundSize='cover';ph.style.backgroundPosition='center'}
- sizes.innerHTML='';
- (product.variants||[]).forEach(opt=>{const b=document.createElement('button');b.type='button';b.className='size';b.innerHTML='<span>'+opt.size+'</span><small>'+Number(opt.price).toFixed(3)+' ر.ع — أضف للسلة</small>';b.onclick=()=>addVariant(opt);sizes.appendChild(b)});
+  const id=new URLSearchParams(location.search).get('id');
+  if(!id){showError(DamaRose.isEnglish()?'Product not found':'المنتج غير موجود');return}
+  try{
+    const response=await fetch('/api/products/'+encodeURIComponent(id),{cache:'no-store'});
+    if(!response.ok)throw new Error('not_found');
+    product=DamaRose.mergeProducts([await response.json()])[0];renderProduct();
+  }catch{
+    showError(DamaRose.isEnglish()?'Product could not be loaded.':'تعذر تحميل المنتج.');
+  }
 }
-updateBadge();load();
+document.getElementById('qtyMinus').addEventListener('click',()=>{quantity=Math.max(1,quantity-1);qtyValue.textContent=String(quantity)});
+document.getElementById('qtyPlus').addEventListener('click',()=>{quantity=Math.min(99,quantity+1);qtyValue.textContent=String(quantity)});
+addButton.addEventListener('click',()=>{if(selectedVariant)DamaRose.addToCart(product,selectedVariant,quantity)});
+DamaRose.updateCartBadge();load();
 </script>
-<script src="/lang.js"></script>
+<script src="/lang.js?v=20261123-royal"></script>
 </body>
 </html>

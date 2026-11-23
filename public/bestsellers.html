@@ -5,7 +5,7 @@
 <title>Dama Rose | الأكثر مبيعًا</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/storefront.css?v=20261002">
+<link rel="stylesheet" href="/storefront.css?v=20261123-royal">
 <style>
 :root{--green:#17483c;--cream:#f5ecdf;--ink:#23483e}
 *{box-sizing:border-box}body{margin:0;background:var(--cream);color:var(--ink);font-family:Tajawal,sans-serif}a{text-decoration:none;color:inherit}
@@ -13,7 +13,7 @@
 .nav{width:min(1120px,94%);height:64px;margin:auto;display:flex;align-items:center;justify-content:space-between;gap:12px}
 .menu{display:flex;align-items:center;gap:24px;color:#f3e7cb}.menu a:hover{color:#d7b477}
 .tools{display:flex;align-items:center;gap:10px}.lang{color:#f3e7cb;border:1px solid rgba(215,180,119,.7);padding:7px 12px;border-radius:999px}
-.cart{color:#f3e7cb;display:grid;place-items:center}.cart svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.cart{color:#f3e7cb;display:grid;place-items:center;position:relative;width:42px;height:42px;border:1px solid rgba(215,180,119,.55);border-radius:50%}.cart svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}.badge{position:absolute;right:-5px;top:-7px;min-width:18px;height:18px;padding:0 4px;border-radius:999px;display:grid;place-items:center;font-size:10px;font-weight:800}
 .hero{background:linear-gradient(120deg,#17483c,#225c4d);color:#fff;padding:58px 0 48px}
 .container{width:min(1120px,94%);margin:auto}.eyebrow{color:#d7b477;font-size:14px;margin-bottom:10px}.hero h1{margin:0;font-size:clamp(32px,5vw,52px);color:#f5e7c6}.hero p{margin:12px 0 0;line-height:1.8;color:#eee2cd}
 main{min-height:55vh}.products{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:18px;padding:42px 0 72px}
@@ -27,15 +27,31 @@ footer{background:#123a31;color:#f2e8d8;padding:20px 0;text-align:center;font-si
 </style>
 </head>
 <body>
-<header class="topbar"><div class="nav"><nav class="menu"><a href="index.html">الرئيسية</a><a href="index.html#products">المنتجات</a><a href="menu.html">المنيو</a><a href="bestsellers.html">الأكثر مبيعًا</a></nav><div class="tools"><a class="lang" href="#">EN | AR</a><a class="cart" href="cart.html" aria-label="السلة"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3.5 5h2l1.7 9.1a2 2 0 0 0 2 1.6h7.6a2 2 0 0 0 1.9-1.4L20.5 8H6.1"/><path d="M9.5 19.5h.01M17.5 19.5h.01"/></svg></a></div></div></header>
+<header class="topbar"><div class="nav"><nav class="menu"><a href="index.html">الرئيسية</a><a href="index.html#products">المنتجات</a><a href="menu.html">المنيو</a><a href="bestsellers.html">الأكثر مبيعًا</a></nav><div class="tools"><a class="lang" href="#">EN | AR</a><a class="cart" href="cart.html" aria-label="السلة"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3.5 5h2l1.7 9.1a2 2 0 0 0 2 1.6h7.6a2 2 0 0 0 1.9-1.4L20.5 8H6.1"/><path d="M9.5 19.5h.01M17.5 19.5h.01"/></svg><span class="badge" id="cartBadge">0</span></a></div></div></header>
 <section class="hero"><div class="container"><div class="eyebrow">★ داما روز</div><h1>الأكثر مبيعًا</h1><p>تظهر هنا المنتجات التي تحددها كالأكثر مبيعًا من لوحة الإدارة.</p></div></section>
 <main class="container"><div class="products" id="bestGrid"><div class="empty">جاري تحميل المنتجات...</div></div></main>
 <footer><div class="container"><a href="index.html">العودة للرئيسية</a></div></footer>
+<script src="/site.js?v=20261123-royal"></script>
 <script>
-const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const price=p=>{const xs=(p.variants||[]).map(v=>Number(v.price)).filter(Number.isFinite);return xs.length?Math.min(...xs).toFixed(3)+' ر.ع':''};
-function render(products){const xs=products.filter(p=>p.pick);const grid=document.getElementById('bestGrid');grid.innerHTML=xs.length?xs.map(p=>'<article class="card">'+(p.image?'<div class="ph" style="background-image:url(\''+String(p.image).replace(/'/g,'%27')+'\')"></div>':'<div class="ph"></div>')+'<div class="card-body"><div class="name">'+esc(p.ar)+'</div><div class="price">ابتداءً من '+price(p)+'</div><div class="card-foot"><a class="view" href="product.html?id='+encodeURIComponent(p.id)+'">اكتشف المنتج</a></div></div></article>').join(''):'<div class="empty">لا توجد منتجات في الأكثر مبيعًا حاليًا.</div>'}
-async function load(){try{const r=await fetch('/api/snapshot?fresh='+Date.now(),{cache:'no-store'});if(!r.ok)throw new Error();const data=await r.json();render(Array.isArray(data.products)?data.products:[])}catch(e){let cached=[];try{cached=JSON.parse(localStorage.getItem('damaRoseProducts')||'[]')}catch{}render(Array.isArray(cached)?cached:[])}}
-load();
-</script><script src="/lang.js"></script>
+const bestGrid=document.getElementById('bestGrid');
+function render(products){
+  const items=products.filter(product=>product?.pick);
+  if(items.length){DamaRose.replaceProductCards(bestGrid,items);return}
+  const empty=document.createElement('div');empty.className='empty';empty.textContent=DamaRose.isEnglish()?'There are no best sellers right now.':'لا توجد منتجات في الأكثر مبيعًا حاليًا.';bestGrid.replaceChildren(empty);
+}
+async function load(){
+  const cached=DamaRose.mergeProducts(DamaRose.readJson('damaRoseProducts',[]));
+  try{
+    const response=await fetch('/api/snapshot?fresh='+Date.now(),{cache:'no-store'});
+    if(!response.ok)throw new Error('snapshot_failed');
+    const snapshot=await response.json();
+    const rawProducts=Array.isArray(snapshot.products)?snapshot.products:[];
+    const products=DamaRose.mergeProducts(rawProducts);
+    localStorage.setItem('damaRoseProducts',JSON.stringify(rawProducts));
+    if(snapshot.settings)localStorage.setItem('damaRoseSettings',JSON.stringify(snapshot.settings));
+    render(products);
+  }catch{render(Array.isArray(cached)?cached:[])}
+}
+DamaRose.updateCartBadge();load();
+</script><script src="/lang.js?v=20261123-royal"></script>
 </body></html>

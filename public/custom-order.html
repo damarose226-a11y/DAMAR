@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>تخصيص طلب | Dama Rose</title>
-<meta name="theme-color" content="#17483c">
+<meta name="theme-color" content="#072A22">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
@@ -19,7 +19,7 @@ footer{background:#061f19;color:#e5dbc6;border-top:2px solid var(--gold);text-al
 @media(max-width:800px){.page{padding:38px 0 56px}.heading h1{font-size:36px}.heading p{font-size:16px}.order-layout{grid-template-columns:1fr}.info-card{order:-1}.order-card{padding:24px}.brand img{height:54px}}
 @media(max-width:520px){.container{width:min(94%,520px)}.nav{min-height:68px}.back{padding:8px 11px;font-size:13px}.lang{padding:8px 10px;font-size:12px}.heading{text-align:right;margin-bottom:26px}.heading h1{font-size:32px}.order-card,.info-card{border-radius:18px}.order-card{padding:20px}.info-card{padding:22px}.field input,.field textarea{font-size:16px}.send{min-height:52px}}
 </style>
-<link rel="stylesheet" href="/storefront.css?v=20261120-dark">
+<link rel="stylesheet" href="/storefront.css?v=20261123-royal">
 </head>
 <body>
 <header class="topbar"><div class="container nav"><a class="brand" href="index.html" aria-label="Dama Rose"><img src="logo.png" alt="Dama Rose"></a><div class="nav-actions"><a class="lang" href="#">EN | AR</a><a class="back" href="index.html">العودة للرئيسية</a></div></div></header>
@@ -40,6 +40,7 @@ footer{background:#061f19;color:#e5dbc6;border-top:2px solid var(--gold);text-al
 </div><div class="note-box">الطلب لا يُعد مؤكداً حتى يصلك تأكيد من داما روز عبر واتساب.</div></aside>
 </div></div></main>
 <footer>© Dama Rose. جميع الحقوق محفوظة.</footer>
+<script src="/site.js?v=20261123-royal"></script>
 <script>
 const FALLBACK_WHATSAPP='96892415565';let orderWhatsapp=FALLBACK_WHATSAPP;
 function normalizePhone(value){let digits=String(value||'').replace(/\D/g,'');if(digits.length===8)digits='968'+digits;return digits||FALLBACK_WHATSAPP}
@@ -51,6 +52,6 @@ function applyPlaceholders(){if(!isEnglish())return;document.getElementById('pro
 document.getElementById('customOrderForm').addEventListener('submit',event=>{event.preventDefault();const product=document.getElementById('productName').value.trim(),quantity=document.getElementById('quantity').value.trim(),notes=document.getElementById('notes').value.trim(),pickup=pickupInput.value;if(!product||!quantity||!pickup)return;const english=isEnglish(),date=new Date(pickup),formatted=new Intl.DateTimeFormat(english?'en-OM':'ar-OM',{dateStyle:'full',timeStyle:'short'}).format(date);const lines=english?['New custom order – Dama Rose','Product: '+product,'Quantity / count: '+quantity,'Pickup time: '+formatted,'Notes: '+(notes||'None')]:['طلب مخصص جديد – داما روز','اسم المنتج: '+product,'الكمية أو العدد: '+quantity,'وقت الاستلام: '+formatted,'ملاحظات: '+(notes||'لا توجد')];location.href='https://wa.me/'+orderWhatsapp+'?text='+encodeURIComponent(lines.join('\n'))});
 applyPlaceholders();loadWhatsapp();
 </script>
-<script src="/lang.js"></script>
+<script src="/lang.js?v=20261123-royal"></script>
 </body>
 </html>

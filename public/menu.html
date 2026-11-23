@@ -6,7 +6,7 @@
 <title>المنيو والأسعار | Dama Rose</title>
 <link rel="manifest" href="/manifest.webmanifest">
 <link rel="apple-touch-icon" href="/logo.png">
-<meta name="theme-color" content="#17483c">
+<meta name="theme-color" content="#072A22">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
@@ -21,7 +21,7 @@ footer{background:#061f19;color:#e5dbc6;border-top:2px solid var(--gold);padding
 @media(max-width:860px){.nav{grid-template-columns:auto 1fr}.menu{display:none}.tools{justify-self:end}.menu-grid{grid-template-columns:1fr}.hero h1{font-size:40px}}
 @media(max-width:560px){.container{width:min(94%,520px)}.nav{height:64px;gap:8px}.brand img{height:58px;width:78px}.lang{padding:7px 9px;font-size:12px}.cart{width:38px;height:38px}.hero{padding:46px 0 40px}.hero h1{font-size:34px}.hero p{font-size:15px}.index-wrap{top:64px}.content{padding:32px 0 48px}.content-head{align-items:flex-start;flex-direction:column}.content-head h2{font-size:26px}.menu-grid{gap:14px}.section-title{padding:16px}.section-title h3{font-size:20px}.items{padding:4px 14px 8px}.menu-item{padding:13px 0}.item-name{font-size:14px}.item-price{min-width:93px}.item-price strong{font-size:18px}.footer-row{align-items:flex-start;flex-direction:column}.footer-logo img{height:64px}}
 </style>
-<link rel="stylesheet" href="/storefront.css?v=20261120-dark">
+<link rel="stylesheet" href="/storefront.css?v=20261123-royal">
 </head>
 <body>
 <header class="topbar"><div class="container nav"><a class="brand" href="index.html" aria-label="Dama Rose"><img src="logo.png" alt="Dama Rose"></a><nav class="menu"><a href="index.html">الرئيسية</a><a href="index.html#products">المنتجات</a><a class="active" href="menu.html">المنيو</a><a href="bestsellers.html">الأكثر مبيعًا</a><a href="offers.html">العروض</a><a href="about.html">من نحن</a><a href="contact.html">تواصل معنا</a></nav><div class="tools"><a class="lang" href="#">EN | AR</a><a class="cart" href="cart.html" aria-label="السلة"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3.5 5h2l1.7 9.1a2 2 0 0 0 2 1.6h7.6a2 2 0 0 0 1.9-1.4L20.5 8H6.1"/><path d="M9.5 19.5h.01M17.5 19.5h.01"/></svg><span class="badge" id="cartBadge">0</span></a></div></div></header>
@@ -121,6 +121,7 @@ window.DAMA_MENU_DEFAULT = [
   }
 ];
 </script>
+<script src="/site.js?v=20261123-royal"></script>
 <script>
 const menuLang=()=>localStorage.getItem('dr_lang')||'ar';
 const menuEsc=value=>String(value??'').replace(/[&<>"']/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
@@ -147,17 +148,19 @@ async function loadMenu(){
   let cached=null;try{cached=parseMenu(localStorage.getItem('damaRoseTextMenu')||'')}catch{}
   renderMenu(cached||defaults);
   try{
-    const response=await fetch('/api/settings?fresh='+Date.now(),{cache:'no-store'});
+    const response=await fetch('/api/snapshot?fresh='+Date.now(),{cache:'no-store'});
     if(!response.ok)throw new Error('menu');
-    const settings=await response.json();
+    const snapshot=await response.json();
+    const settings=snapshot.settings||{};
+    DamaRose.applyShellSettings(settings);
     const fresh=parseMenu(settings.menu_data)||defaults;
     localStorage.setItem('damaRoseTextMenu',JSON.stringify(fresh));
     renderMenu(fresh);
   }catch(error){if(!cached&&!defaults.length)document.getElementById('menuGrid').innerHTML='<div class="empty menu-error">تعذر تحميل المنيو حاليًا.</div>'}
 }
-try{const cart=JSON.parse(localStorage.getItem('damaRoseCart')||'[]');document.getElementById('cartBadge').textContent=cart.reduce((sum,item)=>sum+(Number(item.quantity)||0),0)}catch{}
+DamaRose.updateCartBadge();
 loadMenu();
 </script>
-<script src="/lang.js"></script>
+<script src="/lang.js?v=20261123-royal"></script>
 </body>
 </html>

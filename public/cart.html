@@ -20,19 +20,95 @@
 @media(max-width:520px){.item{grid-template-columns:60px 1fr}.thumb{width:60px;height:60px}.money{grid-column:2;text-align:right;display:flex;gap:10px;align-items:center}.lineprice{margin:0}.head h1{font-size:28px}}
 .cart svg{width:21px;height:21px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
 </style>
-<link rel="stylesheet" href="/storefront.css?v=20261002"></head>
+<link rel="stylesheet" href="/storefront.css?v=20261123-royal"></head>
 <body>
 <header class="topbar"><div class="container nav"><div class="tools"><a class="lang" href="#">EN | AR</a><a class="cart" href="cart.html" aria-label="السلة"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3.5 5h2l1.7 9.1a2 2 0 0 0 2 1.6h7.6a2 2 0 0 0 1.9-1.4L20.5 8H6.1"/><path d="M9.5 19.5h.01M17.5 19.5h.01"/></svg><span class="badge" id="cartBadge">0</span></a></div></div></header>
 <main class="page"><div class="container"><a class="back" href="index.html">← متابعة التسوق</a><div class="head"><div class="eyebrow">Dama Rose</div><h1>سلة الطلب</h1><p>راجع المنتجات والكميات قبل إرسال الطلب عبر واتساب.</p></div><section class="cartbox" id="cartBox"><div id="content"></div></section></div></main>
+<script src="/site.js?v=20261123-royal"></script>
 <script>
-let cart=[];try{cart=JSON.parse(localStorage.getItem('damaRoseCart')||'[]');if(!Array.isArray(cart))cart=[];cart=cart.map(i=>({...i,image:''}));localStorage.setItem('damaRoseCart',JSON.stringify(cart))}catch(e){cart=[];localStorage.removeItem('damaRoseCart')}let settings={whatsapp:'92415565'};
-const content=document.getElementById('content'),badge=document.getElementById('cartBadge');const money=n=>Number(n||0).toFixed(3)+' ر.ع';
-function save(){localStorage.setItem('damaRoseCart',JSON.stringify(cart));render()}function units(){return cart.reduce((s,i)=>s+(Number(i.quantity)||0),0)}function total(){return cart.reduce((s,i)=>s+(Number(i.price)||0)*(Number(i.quantity)||0),0)}function changeQty(key,d){const i=cart.find(x=>x.key===key);if(!i)return;i.quantity=Math.max(1,(Number(i.quantity)||1)+d);save()}function removeItem(key){cart=cart.filter(i=>i.key!==key);save()}
-function cleanWhats(v){const n=String(v||'').replace(/\D/g,'');return n.length===8?'968'+n:n}
-function sendWhatsApp(){if(!cart.length)return;const name=(document.getElementById('customerName')?.value||'').trim(),phone=(document.getElementById('customerPhone')?.value||'').trim(),err=document.getElementById('customerError');if(!name||!phone){if(err)err.style.display='block';return}if(err)err.style.display='none';const num=cleanWhats(settings.whatsapp);if(!num){document.getElementById('notice').style.display='block';return}const lines=['طلب جديد من Dama Rose','','اسم العميل: '+name,'رقم الهاتف: '+phone,''];cart.forEach((i,n)=>lines.push((n+1)+'. '+((localStorage.getItem("dr_lang")==="en"&&i.nameEn)?i.nameEn:i.name)+' — '+i.option+' × '+i.quantity+' — '+money(i.price*i.quantity)));lines.push('','الإجمالي: '+money(total()));window.open('https://wa.me/'+num+'?text='+encodeURIComponent(lines.join('\n')),'_blank')}
-function render(){badge.textContent=units();if(!cart.length){content.innerHTML='<div class="empty"><div class="icon">🛒</div><h2>السلة فارغة</h2><p>لم تضف أي منتجات إلى طلبك بعد.</p><a class="shop" href="index.html#products">تصفح المنتجات</a></div>';return}const rows=cart.map(i=>'<div class="item"><div><div class="name">'+((localStorage.getItem("dr_lang")==="en"&&i.nameEn)?i.nameEn:i.name)+'</div><div class="option">'+i.option+'</div><div class="controls"><button class="qbtn" onclick="changeQty(\''+i.key.replace(/'/g,"\\'")+'\',1)">+</button><span class="qnum">'+i.quantity+'</span><button class="qbtn" onclick="changeQty(\''+i.key.replace(/'/g,"\\'")+'\',-1)">−</button><button class="remove" onclick="removeItem(\''+i.key.replace(/'/g,"\\'")+'\')">حذف</button></div></div><div class="money"><div class="unit">'+money(i.price)+' / الوحدة</div><div class="lineprice">'+money(i.price*i.quantity)+'</div></div></div>').join('');content.innerHTML='<div class="items">'+rows+'</div><div class="summary"><div class="sumrow"><span>الإجمالي</span><strong class="total">'+money(total())+'</strong></div><div class="customer"><div class="customer-title">بيانات العميل</div><div class="field"><label for="customerName">الاسم</label><input id="customerName" type="text" autocomplete="name" placeholder="اكتب اسمك" required></div><div class="field"><label for="customerPhone">رقم الهاتف</label><input id="customerPhone" type="tel" inputmode="tel" autocomplete="tel" placeholder="مثال: 91234567" required></div><div class="customer-error" id="customerError">يرجى إدخال الاسم ورقم الهاتف لإكمال الطلب.</div></div><button class="whatsapp" onclick="sendWhatsApp()">إرسال الطلب عبر واتساب</button><div class="notice" id="notice">رقم واتساب غير مضبوط بعد.</div><a class="continue" href="index.html#products">+ إضافة منتجات أخرى</a></div>'}
-fetch('/api/settings').then(r=>r.json()).then(x=>settings=x).catch(()=>{});render();
+const content=document.getElementById('content');
+const esc=DamaRose.escapeHtml;
+let cart=DamaRose.cart().map((item,index)=>({
+  ...item,
+  key:String(item?.key||`${item?.productId||'item'}|${item?.option||index}`),
+  name:String(item?.name||''),
+  nameEn:String(item?.nameEn||''),
+  option:String(item?.option||''),
+  price:Number(item?.price)||0,
+  quantity:Math.max(1,Number(item?.quantity)||1),
+  image:String(item?.image||'')
+}));
+let settings={whatsapp:'92415565',...DamaRose.cachedSettings()};
+let customerDraft={name:'',phone:''};
+try{localStorage.setItem('damaRoseCart',JSON.stringify(cart))}catch{}
+
+function captureCustomer(){
+  const name=document.getElementById('customerName'),phone=document.getElementById('customerPhone');
+  if(name)customerDraft.name=name.value;if(phone)customerDraft.phone=phone.value;
+}
+function units(){return cart.reduce((sum,item)=>sum+Math.max(0,Number(item.quantity)||0),0)}
+function total(){return cart.reduce((sum,item)=>sum+(Number(item.price)||0)*(Number(item.quantity)||0),0)}
+function save(){captureCustomer();try{localStorage.setItem('damaRoseCart',JSON.stringify(cart))}catch{return}render()}
+function changeQty(key,delta){const item=cart.find(entry=>entry.key===key);if(!item)return;item.quantity=Math.max(1,(Number(item.quantity)||1)+delta);save()}
+function removeItem(key){cart=cart.filter(item=>item.key!==key);save()}
+function displayName(item){const english=String(item.nameEn||'').trim();return DamaRose.isEnglish()&&english&&english!=='*'?english:item.name}
+const productCache=DamaRose.readJson('damaRoseProducts',[]);
+function itemImage(item){const cached=Array.isArray(productCache)?productCache.find(product=>String(product.id)===String(item.productId)):null;return DamaRose.safeImageUrl(item.image||cached?.image)}
+
+function sendWhatsApp(){
+  if(!cart.length)return;
+  captureCustomer();
+  const error=document.getElementById('customerError');
+  const validPhone=customerDraft.phone.replace(/\D/g,'').length>=8;
+  if(!customerDraft.name.trim()||!validPhone){if(error)error.style.display='block';return}
+  if(error)error.style.display='none';
+  const number=DamaRose.cleanWhatsApp(settings.whatsapp);
+  if(!number){const notice=document.getElementById('notice');if(notice)notice.style.display='block';return}
+  const english=DamaRose.isEnglish();
+  const lines=english
+    ?['New order from Dama Rose','','Customer: '+customerDraft.name.trim(),'Phone: '+customerDraft.phone.trim(),'']
+    :['طلب جديد من Dama Rose','','اسم العميل: '+customerDraft.name.trim(),'رقم الهاتف: '+customerDraft.phone.trim(),''];
+  cart.forEach((item,index)=>lines.push(`${index+1}. ${displayName(item)} — ${item.option} × ${item.quantity} — ${DamaRose.money(item.price*item.quantity)}`));
+  lines.push('',(english?'Total: ':'الإجمالي: ')+DamaRose.money(total()),english?'Prices exclude VAT.':'الأسعار لا تشمل ضريبة القيمة المضافة.');
+  window.open(`https://wa.me/${number}?text=${encodeURIComponent(lines.join('\n'))}`,'_blank','noopener');
+}
+
+function render(){
+  DamaRose.updateCartBadge();
+  if(!cart.length){
+    const english=DamaRose.isEnglish();
+    content.innerHTML=`<div class="empty"><div class="icon" aria-hidden="true"><svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M3.5 5h2l1.7 9.1a2 2 0 0 0 2 1.6h7.6a2 2 0 0 0 1.9-1.4L20.5 8H6.1"/><path d="M9.5 19.5h.01M17.5 19.5h.01"/></svg></div><h2>${english?'Your cart is empty':'السلة فارغة'}</h2><p>${english?'You have not added any products yet.':'لم تضف أي منتجات إلى طلبك بعد.'}</p><a class="shop" href="index.html#products">${english?'Browse products':'تصفح المنتجات'}</a></div>`;
+    return;
+  }
+  const english=DamaRose.isEnglish();
+  const rows=cart.map(item=>{const image=itemImage(item);return `<div class="item"><div class="thumb">${image?`<img src="${esc(image)}" alt="${esc(displayName(item))}">`:'Dama Rose'}</div><div><div class="name">${esc(displayName(item))}</div><div class="option">${esc(item.option)}</div><div class="controls"><button class="qbtn" type="button" data-action="inc" data-key="${esc(item.key)}" aria-label="${english?'Increase quantity':'زيادة الكمية'}">+</button><span class="qnum">${item.quantity}</span><button class="qbtn" type="button" data-action="dec" data-key="${esc(item.key)}" aria-label="${english?'Decrease quantity':'تقليل الكمية'}">−</button><button class="remove" type="button" data-action="remove" data-key="${esc(item.key)}">${english?'Remove':'حذف'}</button></div></div><div class="money"><div class="unit">${DamaRose.money(item.price)} / ${english?'unit':'الوحدة'}</div><div class="lineprice">${DamaRose.money(item.price*item.quantity)}</div></div></div>`}).join('');
+  content.innerHTML=`<div class="items">${rows}</div><div class="summary"><div class="sumrow"><span>${english?'Total':'الإجمالي'}</span><strong class="total">${DamaRose.money(total())}</strong></div><p class="vat-note">${english?'Prices exclude VAT.':'الأسعار لا تشمل ضريبة القيمة المضافة.'}</p><div class="customer"><div class="customer-title">${english?'Customer details':'بيانات العميل'}</div><div class="field"><label for="customerName">${english?'Name':'الاسم'}</label><input id="customerName" type="text" autocomplete="name" value="${esc(customerDraft.name)}" placeholder="${english?'Enter your name':'اكتب اسمك'}" required></div><div class="field"><label for="customerPhone">${english?'Phone number':'رقم الهاتف'}</label><input id="customerPhone" type="tel" inputmode="tel" autocomplete="tel" value="${esc(customerDraft.phone)}" placeholder="${english?'Example: 91234567':'مثال: 91234567'}" required></div><div class="customer-error" id="customerError">${english?'Enter a name and a valid phone number to continue.':'يرجى إدخال الاسم ورقم هاتف صحيح لإكمال الطلب.'}</div></div><button class="whatsapp" type="button" data-action="send">${english?'Send order via WhatsApp':'إرسال الطلب عبر واتساب'}</button><div class="notice" id="notice">${english?'WhatsApp number is not configured yet.':'رقم واتساب غير مضبوط بعد.'}</div><a class="continue" href="index.html#products">${english?'+ Add more products':'+ إضافة منتجات أخرى'}</a></div>`;
+  document.getElementById('customerName')?.addEventListener('input',event=>{customerDraft.name=event.target.value});
+  document.getElementById('customerPhone')?.addEventListener('input',event=>{customerDraft.phone=event.target.value});
+}
+
+content.addEventListener('click',event=>{
+  const button=event.target.closest('[data-action]');if(!button)return;
+  const key=button.dataset.key||'';
+  if(button.dataset.action==='inc')changeQty(key,1);
+  if(button.dataset.action==='dec')changeQty(key,-1);
+  if(button.dataset.action==='remove')removeItem(key);
+  if(button.dataset.action==='send')sendWhatsApp();
+});
+async function loadSettings(){
+  try{
+    const response=await fetch('/api/snapshot?fresh='+Date.now(),{cache:'no-store'});
+    if(!response.ok)return;
+    const snapshot=await response.json();
+    if(snapshot.settings&&typeof snapshot.settings==='object'){
+      settings={...settings,...snapshot.settings};
+      localStorage.setItem('damaRoseSettings',JSON.stringify(snapshot.settings));
+      DamaRose.applyShellSettings(settings);
+    }
+  }catch{}
+}
+render();loadSettings();
 </script>
-<script src="/lang.js"></script>
+<script src="/lang.js?v=20261123-royal"></script>
 </body>
 </html>
