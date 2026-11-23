@@ -46,7 +46,8 @@ app.use('/api', async (req, res) => {
   if (!SUPABASE_URL || !SUPABASE_KEY) {
     const publicPreviewPath = req.method === 'GET' && (
       req.path === '/snapshot' || req.path === '/settings' || req.path === '/offers' ||
-      req.path === '/products' || req.path.startsWith('/products/')
+      req.path === '/products' || req.path.startsWith('/products/') ||
+      req.path.startsWith('/product-image/') || req.path.startsWith('/category-image/')
     );
     if (process.env.VERCEL_ENV === 'preview' && publicPreviewPath) {
       try {
