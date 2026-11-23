@@ -44,6 +44,26 @@ app.use('/api', async (req, res) => {
     res.setHeader('Cache-Control', 'public, s-maxage=120, stale-while-revalidate=3600');
   }
   if (!SUPABASE_URL || !SUPABASE_KEY) {
+    const publicPreviewPath = req.method === 'GET' && (
+      req.path === '/snapshot' || req.path === '/settings' || req.path === '/offers' ||
+      req.path === '/products' || req.path.startsWith('/products/')
+    );
+    if (process.env.VERCEL_ENV === 'preview' && publicPreviewPath) {
+      try {
+        const upstream = await fetch('https://damar-ebon.vercel.app' + req.originalUrl, {
+          method: 'GET',
+          headers: { accept: 'application/json' }
+        });
+        const body = Buffer.from(await upstream.arrayBuffer());
+        const contentType = upstream.headers.get('content-type');
+        if (contentType) res.setHeader('content-type', contentType);
+        res.setHeader('Cache-Control', 'private, no-store, max-age=0');
+        return res.status(upstream.status).send(body);
+      } catch (error) {
+        console.error('Preview read-only proxy error', error);
+        return res.status(502).json({ error: 'preview_data_unavailable' });
+      }
+    }
     return res.status(503).json({ error: 'supabase_not_configured' });
   }
 
