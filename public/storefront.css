@@ -305,3 +305,89 @@ dialog::backdrop{background:rgba(2,15,12,.76)!important;backdrop-filter:blur(4px
 @media(prefers-reduced-motion:reduce){
   *,*::before,*::after{scroll-behavior:auto!important;transition-duration:.01ms!important;animation-duration:.01ms!important;animation-iteration-count:1!important}
 }
+
+
+/* Modern Royal Emerald — color palette only */
+:root{
+  --lux-bg:#F8F5EE!important;--lux-surface:#0C3730!important;
+  --lux-card:#FFFFFF!important;--lux-card-2:#205044!important;
+  --lux-gold:#D1B678!important;--lux-gold-bright:#D1B678!important;
+  --lux-text:#0C3730!important;--lux-muted:#52665D!important;
+  --lux-line:#E5DDCC!important;--lux-line-strong:#D1B678!important;
+  --green:#0C3730!important;--green2:#205044!important;--green-2:#205044!important;
+  --green-3:#205044!important;--g:#0C3730!important;--g2:#205044!important;
+  --cream:#F8F5EE!important;--paper:#FFFFFF!important;--card:#FFFFFF!important;
+  --ink:#0C3730!important;--muted:#52665D!important;--line:#E5DDCC!important;
+  color-scheme:light;
+}
+html,body{background-color:#F8F5EE!important;color:#0C3730!important;scrollbar-color:#D1B678 #F8F5EE}
+body{background-image:radial-gradient(circle at 12% 8%,rgba(209,182,120,.08),transparent 26%),radial-gradient(circle at 88% 32%,rgba(209,182,120,.045),transparent 28%)!important}
+*{scrollbar-color:#D1B678 #F8F5EE}
+*::-webkit-scrollbar-track{background:#F8F5EE}
+*::-webkit-scrollbar-thumb{border-color:#F8F5EE}
+.topbar,footer{background:#0C3730!important;color:#F8F5EE!important;border-color:#D1B678!important}
+.menu,.menu a,.topbar .lang,.topbar .back,.topbar .cart{color:#F8F5EE!important}
+.topbar .lang,.topbar .back,.topbar .cart{background:#205044!important}
+.menu a.active,.menu a:hover,.topbar .lang:hover,.topbar .back:hover,.topbar .cart:hover{color:#D1B678!important;border-color:#D1B678!important}
+.hero{background-color:#072A22!important;color:#F8F5EE!important}
+#home.hero{background:linear-gradient(100deg,rgba(7,42,34,.94),rgba(12,55,48,.76)),var(--hero-image,none)!important}
+.hero h1,.hero h2,.hero .eyebrow,.hero .kicker,.hero-social a{color:#D1B678!important}
+.hero p,.feature span,.about p,.offer p,.info-card .step span{color:#F8F5EE!important}
+.features,.section.dark,.about,.daily-shell,.info-card{background:#205044!important;color:#F8F5EE!important}
+.feature,.ico{border-color:rgba(209,182,120,.45)!important}.ico{background:#0C3730!important;color:#D1B678!important}
+main,.page,.section,.featured-video{color:#0C3730!important}
+#products,#product-list,.daily-picks{background:#F8F5EE!important;border-color:#E5DDCC!important}
+.card,.daily-card,.offer-card,.menu-section,.product,.cartbox,.order-card,.panel,.contact-card,.box{
+  background:#FFFFFF!important;color:#0C3730!important;border-color:#E5DDCC!important;
+  box-shadow:0 16px 44px rgba(12,55,48,.08)!important;
+}
+.card:hover,.daily-card:hover,.offer-card:hover,.menu-section:hover,.contact-card:hover{
+  border-color:#D1B678!important;box-shadow:0 22px 50px rgba(12,55,48,.12)!important;
+}
+.card-body,.offer-body,.product .content,.items{color:#0C3730!important}
+.section-head h2,.head h1,.head h2,.heading h1,.content-head h2,.panel h2,.contact-card h3,
+.product .title,.order-card h2,.offer-body h3,.empty h2,.empty h3,.empty b,.name,.item-name,.customer-title,.label{color:#0C3730!important}
+.section-head p,.head p,.heading p,.muted,.hint,.submit-note,.option,.unit,.panel p,.contact-card p,
+.offer-body p,.empty p,.empty span,.item-price small,.pricebox span,.sumrow span,.field label{color:#52665D!important}
+.price,.lineprice,.item-price,.item-price strong,.offer-foot .price,.total,.kicker,.eyebrow,.required{color:#806126!important}
+.hero .eyebrow,.hero .kicker,.about h2,.daily-head h2,.daily-tag,.info-card h2,.info-card .step-num{color:#D1B678!important}
+.daily-head p,.daily-empty,.daily-empty b,.info-card .step b{color:#F8F5EE!important}
+.daily-empty{background:#0C3730!important;border-color:#D1B678!important}
+.ph,.offer-image,.photo,.thumb{background-color:#205044!important;color:#D1B678!important;border-color:#D1B678!important}
+.ph:not([style*="background-image"]),.photo:not([style*="background-image"]),.thumb:not([style*="background-image"]){background:linear-gradient(145deg,#072A22,#205044)!important;color:#D1B678!important}
+.photo::before{color:#D1B678!important}
+.offer-image{background:linear-gradient(145deg,#072A22,#205044)!important}
+.categories .cat{background:#205044!important;border-color:#D1B678!important;color:#F8F5EE!important}
+.cat b{color:#F8F5EE!important}
+.btn.primary,.cta,.add,.view,.whatsapp,.send,.shop{background:#D1B678!important;color:#072A22!important;border-color:#D1B678!important}
+.btn.ghost{color:#F8F5EE!important;background:#205044!important;border-color:#D1B678!important}
+.btn.ghost:hover{color:#D1B678!important;background:#0C3730!important}
+.link,.continue,.back{color:#0C3730!important}
+.link:hover,.continue:hover,.back:hover{color:#806126!important}
+.page .back,.section .back{background:transparent!important;color:#0C3730!important;border-color:#D1B678!important}
+.offer{background:linear-gradient(90deg,rgba(7,42,34,.96),rgba(32,80,68,.75)),var(--gift-image,none)!important;color:#F8F5EE!important}
+.offer h3,.offer-badge{color:#D1B678!important}
+.index-wrap{background:#F8F5EE!important;border-color:#E5DDCC!important}
+.menu-index a,.count,.note{background:#FFFFFF!important;color:#0C3730!important;border-color:#D1B678!important}
+.menu-index a:hover{background:#D1B678!important;color:#072A22!important}
+.section-title{background:#205044!important;border-color:#D1B678!important}
+.section-title h3{color:#D1B678!important}.section-title span{color:#F8F5EE!important}
+.menu-item,.pricebox,.item{border-color:#E5DDCC!important}
+input,textarea,select,.size,.qbtn,.qty{background:#FFFFFF!important;color:#0C3730!important;border-color:#D1B678!important;caret-color:#0C3730!important}
+input::placeholder,textarea::placeholder{color:#52665D!important}
+input:focus,textarea:focus,select:focus{border-color:#0C3730!important;box-shadow:0 0 0 3px rgba(12,55,48,.12)!important}
+.size small{color:#806126!important}.size:hover,.qbtn:hover{background:#F8F5EE!important;border-color:#0C3730!important}
+.size:active,.size[aria-pressed="true"],.size.selected,.size.active{background:#205044!important;color:#F8F5EE!important}
+.size:active small,.size[aria-pressed="true"] small,.size.selected small,.size.active small{color:#D1B678!important}
+.qty button,.qty strong,.qnum{color:#0C3730!important}
+.summary,.customer,.empty,.mapbox,.notice{background:#F8F5EE!important;color:#0C3730!important;border-color:#E5DDCC!important}
+.mapbox strong{color:#0C3730!important}
+.empty-icon,.empty .icon{background:#205044!important;color:#D1B678!important;border-color:#D1B678!important}
+.remove,.customer-error,.menu-error{color:#9A332A!important}
+.info-card .note-box{color:#F8F5EE!important;background:#0C3730!important;border-color:#D1B678!important}
+footer .foot-title,footer a,footer .social a{color:#D1B678!important}
+footer .foot-links,footer .copy,footer .footer-links{color:#F8F5EE!important}
+footer .social a{background:#205044!important}
+dialog,.modal-card,.drawer{background:#FFFFFF!important;color:#0C3730!important;border-color:#D1B678!important}
+@media(max-width:560px){body{background-image:radial-gradient(circle at 18% 6%,rgba(209,182,120,.08),transparent 26%)!important}
+.card,.daily-card,.offer-card,.menu-section,.product,.cartbox,.order-card,.panel,.contact-card{box-shadow:0 12px 28px rgba(12,55,48,.08)!important}}
