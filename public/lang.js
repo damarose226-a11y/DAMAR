@@ -1,5 +1,6 @@
 (()=> {
 const D={
+"صمّم بوكسك":"Build your box","منتجات مشابهة":"Similar products","مشاركة المنتج":"Share product","انتقل للسلة":"Go to cart","نتائج البحث":"Search results","مسح":"Clear",
 "القائمة":"Navigation","أقسام المنتجات":"Product categories","عرض المنتج":"View product",
 "الرئيسية":"Home","المنتجات":"Products","المنيو":"Menu","المنيو والأسعار":"Menu & prices","العروض":"Offers","من نحن":"About us","تواصل معنا":"Contact us","تخصيص طلب":"Custom order",
 "خصّص طلبك":"Customize your order","اكتب تفاصيل طلبك والكمية وموعد الاستلام، ثم أرسلها إلينا عبر واتساب للتأكيد.":"Enter your order details, quantity, and pickup time, then send them to us on WhatsApp for confirmation.","تفاصيل الطلب":"Order details","الكمية أو العدد":"Quantity or count","ملاحظات":"Notes","وقت الاستلام":"Pickup time","اختر اليوم والوقت المناسب للاستلام.":"Choose your preferred pickup date and time.","بعد الضغط ستنتقل إلى واتساب لمراجعة الرسالة وإرسالها.":"You will continue to WhatsApp to review and send the message.",
