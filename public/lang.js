@@ -1,5 +1,6 @@
 (()=> {
 const D={
+"طريقة الاستلام":"Order method","استلام من المحل":"Pickup","طلب توصيل (بالتأكيد من المحل)":"Delivery request (shop confirmation)","موعد الاستلام أو التوصيل (اختياري)":"Pickup or delivery time (optional)","عنوان التوصيل":"Delivery address","ملاحظات الطلب":"Order notes","الطلب والتوصيل وموعد التجهيز والسعر النهائي تخضع لتأكيد المحل عبر واتساب.":"Order, delivery, preparation time and final price require shop confirmation via WhatsApp.","إجمالي المنتجات":"Product subtotal",
 "صمّم بوكسك":"Build your box","منتجات مشابهة":"Similar products","مشاركة المنتج":"Share product","انتقل للسلة":"Go to cart","نتائج البحث":"Search results","مسح":"Clear",
 "القائمة":"Navigation","أقسام المنتجات":"Product categories","عرض المنتج":"View product",
 "الرئيسية":"Home","المنتجات":"Products","المنيو":"Menu","المنيو والأسعار":"Menu & prices","العروض":"Offers","من نحن":"About us","تواصل معنا":"Contact us","تخصيص طلب":"Custom order",

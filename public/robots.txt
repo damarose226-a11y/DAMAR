@@ -1,0 +1,5 @@
+User-agent: *
+Disallow: /admin/
+Disallow: /api/
+Disallow: /cart.html
+Sitemap: https://www.damarosesweet.com/sitemap.xml

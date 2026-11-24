@@ -5,7 +5,7 @@
 <title>Dama Rose | الأكثر مبيعًا</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/storefront.css?v=20261124-shop">
+<link rel="stylesheet" href="/storefront.css?v=20261124-checkout">
 <style>
 :root{--green:#17483c;--cream:#f5ecdf;--ink:#23483e}
 *{box-sizing:border-box}body{margin:0;background:var(--cream);color:var(--ink);font-family:Tajawal,sans-serif}a{text-decoration:none;color:inherit}
@@ -25,7 +25,8 @@ footer{background:#123a31;color:#f2e8d8;padding:20px 0;text-align:center;font-si
 @media(max-width:900px){.products{grid-template-columns:repeat(2,minmax(0,1fr))}.menu{gap:12px;font-size:14px}}
 @media(max-width:560px){.menu a:not(:first-child){display:none}.hero{padding:42px 0}.products{gap:12px;padding:26px 0 48px}.ph{height:155px}.name{font-size:15px}.card-body{padding:12px}}
 </style>
-</head>
+<meta name="description" content="اكتشف الحلويات الأكثر طلباً لدى داما روز."><meta property="og:title" content="Dama Rose | الأكثر مبيعًا">
+<link rel="canonical" href="https://www.damarosesweet.com/bestsellers.html"><meta property="og:type" content="website"><meta property="og:site_name" content="Dama Rose"><meta property="og:url" content="https://www.damarosesweet.com/bestsellers.html"><meta property="og:description" content="اكتشف الحلويات الأكثر طلباً لدى داما روز."><meta property="og:image" content="https://www.damarosesweet.com/logo.png"></head>
 <body>
 <header class="topbar"><div class="dr-nav"><details class="dr-dropdown"><summary><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg><span>القائمة</span></summary><nav class="dr-nav-panel" aria-label="روابط الموقع"><a href="/index.html">الرئيسية</a><a href="/index.html#products">المنتجات</a><a href="/menu.html">المنيو</a><a href="/bestsellers.html" aria-current="page">الأكثر مبيعًا</a><a href="/offers.html">العروض</a><a href="/custom-order.html">تخصيص طلب</a><a href="/box-builder.html">صمّم بوكسك</a><a href="/gifts.html">هدايا داما روز</a><a href="/about.html">من نحن</a><a href="/contact.html">تواصل معنا</a><a href="/cart.html">سلة الطلب</a><span class="dr-nav-label">أقسام المنتجات</span><a href="/baklava.html">بقلاوات</a><a href="/qashtah.html">قشاطي</a><a href="/kunafa.html">كنافة</a><a href="/dry.html">نواشف</a><a href="/icecream.html">بوظة</a></nav></details><nav class="dr-primary" aria-label="التنقل الرئيسي"><a href="/index.html">الرئيسية</a><a href="/index.html#products">المنتجات</a><a href="/menu.html">المنيو</a><a href="/bestsellers.html" aria-current="page">الأكثر مبيعًا</a><a href="/offers.html">العروض</a><a href="/about.html">من نحن</a><a href="/contact.html">تواصل معنا</a></nav><div class="dr-tools"><a class="lang" href="#">EN | AR</a><a class="cart" href="/cart.html" aria-label="السلة"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3.5 5h2l1.7 9.1a2 2 0 0 0 2 1.6h7.6a2 2 0 0 0 1.9-1.4L20.5 8H6.1"/><path d="M9.5 19.5h.01M17.5 19.5h.01"/></svg><span class="badge" id="cartBadge">0</span></a></div></div></header>
 <section class="hero"><div class="container"><div class="eyebrow">★ داما روز</div><h1>الأكثر مبيعًا</h1><p>تظهر هنا المنتجات التي تحددها كالأكثر مبيعًا من لوحة الإدارة.</p></div></section>
@@ -37,6 +38,6 @@ const price=p=>{const xs=(p.variants||[]).map(v=>Number(v.price)).filter(Number.
 function render(products){const xs=products.filter(p=>p.pick);const grid=document.getElementById('bestGrid');grid.innerHTML=xs.length?xs.map(p=>'<article class="card">'+(p.image?'<div class="ph" style="background-image:url(\''+String(p.image).replace(/'/g,'%27')+'\')"></div>':'<div class="ph"></div>')+'<div class="card-body"><div class="name">'+esc(p.ar)+'</div><div class="price">ابتداءً من '+price(p)+'</div><div class="card-foot"><a class="view" href="product.html?id='+encodeURIComponent(p.id)+'">اكتشف المنتج</a></div></div></article>').join(''):'<div class="empty">لا توجد منتجات في الأكثر مبيعًا حاليًا.</div>'}
 async function load(){try{const r=await fetch('/api/snapshot?fresh='+Date.now(),{cache:'no-store'});if(!r.ok)throw new Error();const data=await r.json();render(Array.isArray(data.products)?data.products:[])}catch(e){let cached=[];try{cached=JSON.parse(localStorage.getItem('damaRoseProducts')||'[]')}catch{}render(Array.isArray(cached)?cached:[])}}
 load();
-</script><script src="/lang.js"></script>
+</script><script src="/lang.js?v=20261124-checkout"></script>
 <script src="/navigation.js?v=20261124-shop"></script>
 </body></html>
