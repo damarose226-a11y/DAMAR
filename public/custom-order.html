@@ -19,10 +19,10 @@ footer{background:#061f19;color:#e5dbc6;border-top:2px solid var(--gold);text-al
 @media(max-width:800px){.page{padding:38px 0 56px}.heading h1{font-size:36px}.heading p{font-size:16px}.order-layout{grid-template-columns:1fr}.info-card{order:-1}.order-card{padding:24px}.brand img{height:54px}}
 @media(max-width:520px){.container{width:min(94%,520px)}.nav{min-height:68px}.back{padding:8px 11px;font-size:13px}.lang{padding:8px 10px;font-size:12px}.heading{text-align:right;margin-bottom:26px}.heading h1{font-size:32px}.order-card,.info-card{border-radius:18px}.order-card{padding:20px}.info-card{padding:22px}.field input,.field textarea{font-size:16px}.send{min-height:52px}}
 </style>
-<link rel="stylesheet" href="/storefront.css?v=20261124-emerald">
+<link rel="stylesheet" href="/storefront.css?v=20261124-navigation">
 </head>
 <body>
-<header class="topbar"><div class="container nav"><a class="brand" href="index.html" aria-label="Dama Rose"><img src="logo.png" alt="Dama Rose"></a><div class="nav-actions"><a class="lang" href="#">EN | AR</a><a class="back" href="index.html">العودة للرئيسية</a></div></div></header>
+<header class="topbar"><div class="dr-nav"><details class="dr-dropdown"><summary><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg><span>القائمة</span></summary><nav class="dr-nav-panel" aria-label="روابط الموقع"><a href="/index.html">الرئيسية</a><a href="/index.html#products">المنتجات</a><a href="/menu.html">المنيو</a><a href="/bestsellers.html">الأكثر مبيعًا</a><a href="/offers.html">العروض</a><a href="/custom-order.html" aria-current="page">تخصيص طلب</a><a href="/gifts.html">هدايا داما روز</a><a href="/about.html">من نحن</a><a href="/contact.html">تواصل معنا</a><a href="/cart.html">سلة الطلب</a><span class="dr-nav-label">أقسام المنتجات</span><a href="/baklava.html">بقلاوات</a><a href="/qashtah.html">قشاطي</a><a href="/kunafa.html">كنافة</a><a href="/dry.html">نواشف</a><a href="/icecream.html">بوظة</a></nav></details><a class="dr-brand" href="index.html" aria-label="Dama Rose"><img src="logo.png" alt="Dama Rose"></a><nav class="dr-primary" aria-label="التنقل الرئيسي"><a href="/index.html">الرئيسية</a><a href="/index.html#products">المنتجات</a><a href="/menu.html">المنيو</a><a href="/bestsellers.html">الأكثر مبيعًا</a><a href="/offers.html">العروض</a><a href="/about.html">من نحن</a><a href="/contact.html">تواصل معنا</a></nav><div class="dr-tools"><a class="lang" href="#">EN | AR</a><a class="cart" href="/cart.html" aria-label="السلة"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3.5 5h2l1.7 9.1a2 2 0 0 0 2 1.6h7.6a2 2 0 0 0 1.9-1.4L20.5 8H6.1"/><path d="M9.5 19.5h.01M17.5 19.5h.01"/></svg><span class="badge" id="cartBadge">0</span></a></div></div></header>
 <main class="page"><div class="container">
 <div class="heading"><div class="eyebrow">داما روز</div><h1>خصّص طلبك</h1><p>اكتب تفاصيل طلبك والكمية وموعد الاستلام، ثم أرسلها إلينا عبر واتساب للتأكيد.</p></div>
 <div class="order-layout">
@@ -39,7 +39,7 @@ footer{background:#061f19;color:#e5dbc6;border-top:2px solid var(--gold);text-al
 <div class="step"><div class="step-num">3</div><div><b>أرسل الطلب للتأكيد</b><span>سنراجع التفاصيل معك عبر واتساب ونؤكد إمكانية التجهيز.</span></div></div>
 </div><div class="note-box">الطلب لا يُعد مؤكداً حتى يصلك تأكيد من داما روز عبر واتساب.</div></aside>
 </div></div></main>
-<footer>© Dama Rose. جميع الحقوق محفوظة.</footer>
+<footer>© Dama Rose. جميع الحقوق محفوظة.<nav class="dr-footer-nav" aria-label="روابط سريعة"><strong>روابط سريعة</strong><div class="dr-footer-links"><a href="/index.html">الرئيسية</a><a href="/index.html#products">المنتجات</a><a href="/menu.html">المنيو</a><a href="/bestsellers.html">الأكثر مبيعًا</a><a href="/offers.html">العروض</a><a href="/custom-order.html" aria-current="page">تخصيص طلب</a><a href="/gifts.html">هدايا داما روز</a><a href="/about.html">من نحن</a><a href="/contact.html">تواصل معنا</a><a href="/cart.html">سلة الطلب</a><a href="/baklava.html">بقلاوات</a><a href="/qashtah.html">قشاطي</a><a href="/kunafa.html">كنافة</a><a href="/dry.html">نواشف</a><a href="/icecream.html">بوظة</a></div></nav></footer>
 <script>
 const FALLBACK_WHATSAPP='96892415565';let orderWhatsapp=FALLBACK_WHATSAPP;
 function normalizePhone(value){let digits=String(value||'').replace(/\D/g,'');if(digits.length===8)digits='968'+digits;return digits||FALLBACK_WHATSAPP}
@@ -52,5 +52,6 @@ document.getElementById('customOrderForm').addEventListener('submit',event=>{eve
 applyPlaceholders();loadWhatsapp();
 </script>
 <script src="/lang.js"></script>
+<script src="/navigation.js?v=20261124"></script>
 </body>
 </html>

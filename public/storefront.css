@@ -391,3 +391,33 @@ footer .social a{background:#205044!important}
 dialog,.modal-card,.drawer{background:#FFFFFF!important;color:#0C3730!important;border-color:#D1B678!important}
 @media(max-width:560px){body{background-image:radial-gradient(circle at 18% 6%,rgba(209,182,120,.08),transparent 26%)!important}
 .card,.daily-card,.offer-card,.menu-section,.product,.cartbox,.order-card,.panel,.contact-card{box-shadow:0 12px 28px rgba(12,55,48,.08)!important}}
+
+
+/* Shared storefront navigation — preserves the Emerald palette. */
+.topbar .dr-nav{width:min(1180px,94%);margin:auto;min-height:72px;display:flex;align-items:center;justify-content:space-between;gap:18px;position:relative}
+.dr-nav .dr-brand{flex:none;display:flex;align-items:center}.dr-nav .dr-brand img{height:54px;width:auto;max-width:90px;object-fit:contain}
+.dr-nav .dr-primary{display:flex;align-items:center;justify-content:center;gap:16px;flex:1;white-space:nowrap;color:#F8F5EE;font-size:14px}
+.dr-nav .dr-primary a:hover,.dr-nav .dr-primary a[aria-current="page"]{color:#D1B678;text-decoration:underline;text-underline-offset:7px}
+.dr-nav .dr-tools{display:flex;align-items:center;gap:9px;flex:none;margin-inline-start:auto}
+.dr-nav .dr-tools .cart{display:grid;place-items:center;width:42px;height:42px;border:1px solid #D1B678;border-radius:12px;padding:0;position:relative}
+.dr-nav .dr-tools .lang{padding:8px 10px;border:1px solid #D1B678;border-radius:999px;white-space:nowrap;font-size:12px}
+.dr-nav .dr-tools .cart svg{width:21px;height:21px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.dr-nav .dr-tools .badge{position:absolute;top:-5px;right:-5px;min-width:18px;height:18px;border-radius:999px;padding:0 4px;display:grid;place-items:center;font-size:10px;font-weight:800}
+.dr-nav .dr-dropdown{position:relative;flex:none;z-index:3}
+.dr-nav .dr-dropdown summary{list-style:none;display:flex;align-items:center;gap:8px;cursor:pointer;color:#F8F5EE;background:#205044;border:1px solid #D1B678;border-radius:12px;padding:9px 12px;white-space:nowrap;font-size:14px}
+.dr-nav .dr-dropdown summary::-webkit-details-marker{display:none}
+.dr-nav .dr-dropdown summary svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:1.8}
+.dr-nav .dr-dropdown[open] summary{color:#D1B678}
+.dr-nav .dr-nav-panel{position:absolute;inset-inline-start:0;top:calc(100% + 12px);width:min(320px,88vw);max-height:min(70vh,520px);overflow:auto;overscroll-behavior:contain;background:#0C3730;color:#F8F5EE;border:1px solid #D1B678;border-radius:14px;padding:10px;box-shadow:0 16px 40px rgba(7,42,34,.24)}
+.dr-nav-panel a{display:block;padding:9px 12px;border-radius:8px;font-size:14px;line-height:1.5}
+.dr-nav-panel a:hover,.dr-nav-panel a[aria-current="page"]{background:#205044;color:#D1B678}
+.dr-nav-panel .dr-nav-label{display:block;color:#D1B678;font-size:12px;font-weight:700;padding:10px 12px 5px;border-top:1px solid rgba(209,182,120,.3);margin-top:5px}
+.dr-nav a:focus-visible,.dr-nav summary:focus-visible,.dr-footer-nav a:focus-visible{outline:2px solid #D1B678;outline-offset:3px}
+footer .dr-footer-nav{width:min(1120px,92%);margin:18px auto 0;padding:18px 0;border-top:1px solid rgba(209,182,120,.35);text-align:center}
+.dr-footer-nav strong{display:block;color:#D1B678;margin-bottom:10px}
+.dr-footer-nav .dr-footer-links{display:flex;flex-wrap:wrap;justify-content:center;gap:10px 20px;font-size:13px;line-height:1.7}
+footer .dr-footer-nav a{color:#F8F5EE!important}
+footer .dr-footer-nav a:hover,footer .dr-footer-nav a[aria-current="page"]{color:#D1B678!important;text-decoration:underline}
+#products{scroll-margin-top:85px}
+@media(max-width:1050px){.dr-nav .dr-primary{display:none}}
+@media(max-width:560px){.topbar .dr-nav{min-height:64px;gap:8px}.dr-nav .dr-tools{gap:7px}.dr-nav .dr-tools .cart{width:38px;height:38px}.dr-nav .dr-dropdown summary{padding:8px 10px}.dr-nav .dr-brand img{height:42px;max-width:65px}.dr-nav .dr-nav-panel{max-height:65vh}.dr-footer-nav .dr-footer-links{gap:8px 15px}}

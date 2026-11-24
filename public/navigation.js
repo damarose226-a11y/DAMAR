@@ -1,0 +1,4 @@
+(()=>{const menu=document.querySelector('.dr-dropdown');if(menu){document.addEventListener('click',e=>{if(menu.open&&!menu.contains(e.target))menu.open=false});document.addEventListener('keydown',e=>{if(e.key==='Escape'&&menu.open){menu.open=false;menu.querySelector('summary').focus()}});menu.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>{menu.open=false}));}
+function syncBadge(){const badge=document.getElementById('cartBadge');if(!badge)return;try{const cart=JSON.parse(localStorage.getItem('damaRoseCart')||'[]');badge.textContent=Array.isArray(cart)?cart.reduce((sum,item)=>sum+(Number(item.quantity)||0),0):0}catch{badge.textContent='0'}}
+syncBadge();window.addEventListener('pageshow',syncBadge);window.addEventListener('storage',e=>{if(e.key==='damaRoseCart')syncBadge()});
+})();
